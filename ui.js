@@ -89,7 +89,10 @@ $(function () {
         const result = runMonteCarloSimulation(simulationData);
         $('#results-main').show();
         const $results = $('#results');
-        $results.val(`Error rate - TP: ${result.tpErrorRate}%, LT: ${result.ltErrorRate}% (Aim to keep this below 25%. By adding more sample data. Lower is better)\n\n`);
+        const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
+        $results.val(`This project will consume ${p85.Effort} dev-weeks of effort or less (85% confidence).\nYou can deliver this project in ${p85.Duration} calendar weeks or less (85% confidence)\n\n`);
+        $results.val($results.val() + `-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
+        $results.val($results.val() + `Error rate - TP: ${result.tpErrorRate}%, LT: ${result.ltErrorRate}% (Aim to keep this below 25%. By adding more sample data. Lower is better)\n\n`);
         for (const res of result.resultsTable) {
             $results.val($results.val() + `Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\n`);
         }
