@@ -45,7 +45,6 @@ $(function () {
     }
     function share() {
         if (readSimulationData()) {
-            console.log('uhuu');
             navigator.clipboard.writeText(location.href);
             $('#share').popover('show');
             setTimeout(() => $('#share').popover('dispose'), 2000);
@@ -92,7 +91,7 @@ $(function () {
         const $results = $('#results');
         $results.val(`Error rate - TP: ${result.tpErrorRate}%, LT: ${result.ltErrorRate}% (Aim to keep this below 25%. By adding more sample data. Lower is better)\n\n`);
         for (const res of result.resultsTable) {
-            $results.val($results.val() + `Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\tLT: ${res.LT}\n`);
+            $results.val($results.val() + `Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\n`);
         }
     });
     if (location.hash && location.hash.trim().length > 1) {
