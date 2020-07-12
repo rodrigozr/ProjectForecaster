@@ -1,0 +1,19 @@
+{
+  "name": "project-forecaster",
+  "version": "1.0.0",
+  "description": "Forecast probabilities of a project's effort and duration using Monte Carlo simulations",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install && cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/jquery/dist/jquery.min.js node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./"
+  },
+  "author": "Rodrigo Rosauro",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodrigozr/ProjectForecaster.git"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "jquery": "^3.5.1"
+  }
+}

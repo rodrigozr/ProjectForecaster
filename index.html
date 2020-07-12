@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Project Forecaster</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.bundle.min.js"></script>
+    
+    <style>
+        /* Remove the navbar's default margin-bottom and rounded borders */
+        .navbar {
+            margin-bottom: 0;
+            border-radius: 0;
+        }
+
+        /* Add a gray background color and some padding to the footer */
+        footer {
+            background-color: #f2f2f2;
+            padding: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="#">Project Forecaster</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Documentation</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">Feedback</a>
+                    <div class="dropdown-menu" aria-labelledby="dropdown01">
+                        <a class="dropdown-item" href="#">Issues</a>
+                        <a class="dropdown-item" href="#">Contribute</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <main role="main" class="container">
+        <br /><br /><br />
+        <div class="container text-center">
+            <h1>Project forecaster</h1>
+            <p>Forecast probabilities of a project's effort and duration using Monte Carlo simulations.
+                This tool was especially designed for services which are using the Kanban method, but it can also give
+                good results for any teams which limit their WIP (Work in Process) and track their lead times.
+            </p>
+        </div>
+
+        <div class="container-fluid bg-6 text-center">
+            <div class="row">
+                <div class="col-sm-6 text-left">
+                    <h3> Project properties</h3>
+                    <label for="teamName">Team name: </label>
+                    <input type="text" size="30" id="teamName" />
+                    <br />
+                    <label for="projectName">Project name: </label>
+                    <input type="text" size="30" id="projectName" />
+                    <br />
+                    <label for="totalContributors">Team size: </label>
+                    <input type="number" min="1" max="9999" id="totalContributors" value="1" data-toggle="tooltip"
+                        data-html="true" data-placement="right"
+                        title="Total number of <u>individual contributors</u> on this team or service.<br/>It is CRUCIAL that this number represents the number of contributors which generated the weekly throughput samples in the section below" />
+                    (mandatory)
+                    <br />
+                    <label for="minContributors">Minimum contributors: </label>
+                    <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip" data-html="true"
+                        data-placement="right"
+                        title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    <br />
+                    <label for="maxContributors">Maximum contributors: </label>
+                    <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip" data-html="true"
+                        data-placement="right"
+                        title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism).<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+
+                </div>
+                <div class="col-sm-6 text-left">
+                    <h3>Simulation properties</h3>
+                    <label for="numberOfSimulations">Number of simulations: </label>
+                    <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="500000"
+                        data-toggle="tooltip" data-html="true" data-placement="right"
+                        title="Number of simulations to execute.<br/><br/>Minimum: 10K, Default: 500K, Max: 10MM" />
+                    <br />
+                    <label for="sCurveSize">"S-Curve" size: </label>
+                    <input type="number" min="0" max="50" id="sCurveSize" value="20" data-toggle="tooltip"
+                        data-html="true" data-placement="right"
+                        title="Size of the S-Curve in the beginning and end of the project. Empirical evidence demonstrates that most projects have lower productivity in the first 20% and last 20% of the project<br/><br/>Minimum: 0%, Default: 20%, Max: 50%" />
+                    %
+                    <br />
+                    <label for="numberOfTasks">Number of tasks: </label>
+                    <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
+                        data-html="true" data-placement="right"
+                        title="Number of tasks estimated for this project (between &quot;cats and camels&quot;)" />
+                    (mandatory)
+                </div>
+            </div>
+        </div><br>
+
+        <div class="container-fluid bg-12 text-center">
+            <h2>Historical data</h2>
+            <div class="row">
+                <div class="col-sm-4">
+                    <h3>Weekly throughput</h3>
+                    <p>(Mandatory)</p>
+                    <textarea id="tpSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
+                        data-placement="right"
+                        title="Paste here your historical data of <u>weekly throughput</u>. It is very important that this data represents only throughput of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas<br/><br/>Minimum: 7 weeks of data. Maximum: 24 weeks of data"></textarea>
+                </div>
+                <div class="col-sm-4">
+                    <h3>Task lead-times</h3>
+                    <p>(Optional)</p>
+                    <textarea id="ltSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
+                        data-placement="left"
+                        title="Optionally paste here your historical data of tasks <u>lead-time</u> (a.k.a cycle time) - one entry per task. It is very important that this data represents only the lead-time of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
+                </div>
+                <div class="col-sm-4">
+                    <h3>Projects split rates</h3>
+                    <p>(Optional)</p>
+                    <textarea id="splitRateSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
+                        data-placement="left"
+                        title="Optionally paste here your historical data of project's <u>split rates</u> (actual tasks quantity at the end of the project divided by the originally planned tasks quantity) - one entry per project.<br>For a 10% split rate in a project, you should put '1.1', for example.<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="container-fluid bg-12 text-center">
+            <h2>Risks</h2>
+            <p>You can optionally model risks of your project, which will be added to the simulations.</p>
+            <div class="row">
+                <table id="risks" class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">Likelihood</th>
+                            <th scope="col">Low impact</th>
+                            <th scope="col">High impact</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><input type="number" min="0" max="100" name="likelihood"></input>%</td>
+                            <td><input type="number" min="0" max="100" name="lowImpact"></input> tasks</td>
+                            <td><input type="number" min="0" max="100" name="highImpact"></input> tasks</td>
+                            <td><input type="text" name="description"></input></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+
+        <div class="container-fluid bg-12 text-right">
+            <button id="addRisk" type="button" class="btn btn-secondary">Add row</button>
+        </div>
+        <div class="container-fluid bg-12 text-center">
+            <button id="run" type="button" class="btn btn-primary">Run the simulation!</button>
+            <button id="share" type="button" class="btn btn-secondary" title="All set!"
+                data-content="The link has been copied to your clipboard">Share simulation</button>
+        </div>
+        <div id="results-main" class="container-fluid bg-12 text-center" style="display:none">
+            <h2>Simulation results</h2>
+            <textarea id="results" class="col-sm-12" rows="23"></textarea>
+        </div>
+
+        <br><br>
+    </main>
+
+
+
+    <footer class="container-fluid text-center">
+        <p>Created with ❤️ by <a href="https://edu.kanban.university/users/rodrigo-rosauro">Rodrigo Rosauro</a>.</p>
+    </footer>
+
+</body>
+<script src="monte_carlo.js"></script>
+<script src="ui.js" async="async"></script>
+
+</html>
