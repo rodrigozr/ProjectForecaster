@@ -97,16 +97,16 @@ $(function () {
 
             // Report the results
             const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-            write(`This project will consume up to ${p85.Effort} man-weeks of effort (85% confidence).\n`);
-            write(`This project can be delivered in up to ${p85.Duration} calendar weeks (85% confidence)\n\n`);
+            write(`This project will consume up to ${p85.Effort} person-weeks of effort (85% of confidence).\n`);
+            write(`This project can be delivered in up to ${p85.Duration} calendar weeks (85% of confidence)\n\n`);
             write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
             write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
             write(`Error rates:\n - Weekly throughput: ${result.tpErrorRate}%\n - Lead-times: ${result.ltErrorRate}%\n (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
             write('All probabilities:\n')
-            write(`  Likelihood\tDuration\tTasks\tEffort       \tComment\n`);
+            write(`  Likelihood\tDuration\tTasks\tEffort          \tComment\n`);
             for (const res of result.resultsTable) {
                 const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
-                write(`  ${res.Likelihood}%      \t${res.Duration} weeks \t${res.TotalTasks}\t${res.Effort} man-weeks\t(${comment})\n`);
+                write(`  ${res.Likelihood}%      \t${res.Duration} weeks \t${res.TotalTasks}\t${res.Effort} person-weeks  \t(${comment})\n`);
             }
         }, 100);
 
