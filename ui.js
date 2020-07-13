@@ -44,6 +44,7 @@ $(function () {
             setTimeout(() => $('#share').popover('dispose'), 2000);
         }
     }
+    let currentlyLoadedHash = null;
     function readSimulationData() {
         const simulationData = {
             teamName: $('#teamName').val(),
@@ -69,8 +70,9 @@ $(function () {
         }
         simulationData.minContributors = simulationData.minContributors || simulationData.totalContributors;
         simulationData.maxContributors = simulationData.maxContributors || simulationData.totalContributors;
-        const b64 = btoa(JSON.stringify(simulationData));
-        location.hash = b64;
+        const hash = '#' + btoa(JSON.stringify(simulationData));
+        currentlyLoadedHash = hash;
+        location.hash = hash;
         return simulationData;
     }
     $('#addRisk').on('click', addRisk);
@@ -111,6 +113,7 @@ $(function () {
     });
     function loadDataFromUrl() {
         try {
+            currentlyLoadedHash = location.hash;
             const simulationData = JSON.parse(atob(location.hash.trim().substring(1)));
             for (const name of Object.getOwnPropertyNames(simulationData)) {
                 const $el = $('#' + name);
@@ -130,5 +133,10 @@ $(function () {
     }
     if (location.hash && location.hash.trim().length > 1) {
         loadDataFromUrl();
+    }
+    window.onhashchange = function() {
+        if (currentlyLoadedHash != location.hash) {
+            location.reload();
+        }
     }
 });
