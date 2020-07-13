@@ -1,5 +1,5 @@
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-toggle="tooltip"]').tooltip({delay: 500});
 
     function parseSamples(selector) {
         let val = $(selector).val() || '';
