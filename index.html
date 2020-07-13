@@ -67,46 +67,81 @@
             <div class="row">
                 <div class="col-sm-6 text-left">
                     <h3> Project properties</h3>
-                    <label for="teamName">Team name: </label>
-                    <input type="text" size="30" id="teamName" />
-                    <br />
-                    <label for="projectName">Project name: </label>
-                    <input type="text" size="30" id="projectName" />
-                    <br />
-                    <label for="totalContributors">Team size: </label>
-                    <input type="number" min="1" max="9999" id="totalContributors" value="1" data-toggle="tooltip"
-                        data-html="true" data-placement="right"
-                        title="Total number of <u>individual contributors</u> on this team or service.<br/>It is CRUCIAL that this number represents the number of contributors which generated the weekly throughput samples in the section below" />
-                    (mandatory)
-                    <br />
-                    <label for="numberOfTasks">Number of tasks: </label>
-                    <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
-                        data-html="true" data-placement="right"
-                        title="Number of tasks estimated for this project.<br/><br/>Notice that tasks should be within a reasonable range of size (up to 400% difference in sizes is usually fine). It doesn't matter how you are breaking down your projects, as long as tasks sizes are within this range. This could be user stories, or any other granular level that makes sense to you." />
-                    (mandatory)
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-teamName">Team name:</span>
+                        </div>
+                        <input type="text" id="teamName" class="form-control" aria-describedby="label-teamName" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-projectName">Project name:</span>
+                        </div>
+                        <input type="text" id="projectName" class="form-control" aria-describedby="label-projectName" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-totalContributors">Team size:</span>
+                        </div>
+                        <input type="number" min="1" max="9999" id="totalContributors" value="1" data-toggle="tooltip"
+                            data-html="true" data-placement="right" class="form-control"
+                            aria-describedby="label-totalContributors" required="required"
+                            title="Total number of <u>individual contributors</u> on this team or service.<br/>It is CRUCIAL that this number represents the number of contributors which generated the weekly throughput samples in the section below" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">contributors</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-numberOfTasks">Number of tasks:</span>
+                        </div>
+                        <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
+                            data-html="true" data-placement="right" class="form-control"
+                            aria-describedby="label-numberOfTasks" required="required"
+                            title="Number of tasks estimated for this project.<br/><br/>Notice that tasks should be within a reasonable range of size (up to 400% difference in sizes is perfectly fine). It doesn't matter how you are breaking down your projects, as long as tasks sizes are within this range. This could be user stories, or any other granular level that makes sense to you." />
+                    </div>
                 </div>
                 <div class="col-sm-6 text-left">
                     <h3>Simulation properties</h3>
-                    <label for="numberOfSimulations">Number of simulations: </label>
-                    <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="500000"
-                        data-toggle="tooltip" data-html="true" data-placement="right"
-                        title="Number of simulations to execute.<br/><br/>Minimum: 10K, Default: 500K, Max: 10MM" />
-                    <br />
-                    <label for="sCurveSize">"S-Curve" size: </label>
-                    <input type="number" min="0" max="50" id="sCurveSize" value="20" data-toggle="tooltip"
-                        data-html="true" data-placement="right"
-                        title="Size of the S-Curve in the beginning and end of the project. Empirical evidence demonstrates that most projects have lower productivity in the first 20% and last 20% of the project<br/><br/>Minimum: 0%, Default: 20%, Max: 50%" />
-                    %
-                    <br />
-                    <label for="minContributors">Minimum contributors: </label>
-                    <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip" data-html="true"
-                        data-placement="right"
-                        title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
-                    <br />
-                    <label for="maxContributors">Maximum contributors: </label>
-                    <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip" data-html="true"
-                        data-placement="right"
-                        title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism).<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-numberOfSimulations">Number of simulations:</span>
+                        </div>
+                        <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="500000"
+                            data-toggle="tooltip" data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-numberOfSimulations" required="required"
+                            title="Number of simulations to execute.<br/><br/>Minimum: 10K, Default: 500K, Max: 10MM" />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-sCurveSize">"S-Curve" size:</span>
+                        </div>
+                        <input type="number" min="0" max="50" id="sCurveSize" value="20" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-sCurveSize"
+                            title="Size of the S-Curve in the beginning and end of the project. Empirical evidence demonstrates that most projects have lower productivity in the first 20% and last 20% of the project<br/><br/>Minimum: 0%, Default: 20%, Max: 50%" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-minContributors">Minimum contributors:</span>
+                        </div>
+                        <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-minContributors"
+                            title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-maxContributors">Maximum contributors:</span>
+                        </div>
+                        <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-minContributors"
+                            title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism). Cannot be higher than the 'Team size'.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    </div>
                 </div>
             </div>
         </div><br>
@@ -118,21 +153,21 @@
                     <h3>Weekly throughput</h3>
                     <p>(Mandatory)</p>
                     <textarea id="tpSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
-                        data-placement="right"
+                        data-placement="right" class="form-control text-monospace"
                         title="Paste here your historical data of <u>weekly throughput</u>. It is very important that this data represents only throughput of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas<br/><br/>Minimum: 7 weeks of data. Maximum: 24 weeks of data"></textarea>
                 </div>
                 <div class="col-sm-4">
                     <h3>Task lead-times</h3>
                     <p>(Optional)</p>
                     <textarea id="ltSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
-                        data-placement="left"
+                        data-placement="left" class="form-control text-monospace"
                         title="Optionally paste here your historical data of tasks <u>lead-time</u> (a.k.a cycle time) - one entry per task. It is very important that this data represents only the lead-time of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
                 </div>
                 <div class="col-sm-4">
                     <h3>Projects split rates</h3>
                     <p>(Optional)</p>
                     <textarea id="splitRateSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
-                        data-placement="left"
+                        data-placement="left" class="form-control text-monospace"
                         title="Optionally paste here your historical data of project's <u>split rates</u> (actual tasks quantity at the end of the project divided by the originally planned tasks quantity) - one entry per project.<br>For a 10% split rate in a project, you should put '1.1', for example.<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
                 </div>
             </div>
@@ -153,10 +188,34 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><input type="number" min="0" max="100" name="likelihood"></input>%</td>
-                            <td><input type="number" min="0" max="100" name="lowImpact"></input> tasks</td>
-                            <td><input type="number" min="0" max="100" name="highImpact"></input> tasks</td>
-                            <td><input type="text" name="description"></input></td>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="1" max="100" class="form-control"
+                                        name="likelihood"></input>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">%</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="0" max="100" class="form-control"
+                                        name="lowImpact"></input>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">tasks</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="input-group mb-3">
+                                    <input type="number" min="1" max="100" class="form-control"
+                                        name="highImpact"></input>
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">tasks</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><input type="text" class="form-control" name="description"></input></td>
                         </tr>
                     </tbody>
                 </table>
@@ -171,11 +230,12 @@
         <div class="container-fluid bg-12 text-center">
             <button id="run" type="button" class="btn btn-primary">Run the simulation!</button>
             <button id="share" type="button" class="btn btn-secondary" title="Share!"
-                data-content="✅ &nbsp;You are all set! The link has been copied to your clipboard">Share simulation</button>
+                data-content="✅ &nbsp;You are all set! The link has been copied to your clipboard">Share
+                simulation</button>
         </div>
         <div id="results-main" class="container-fluid bg-12 text-center" style="display:none">
             <h2>Simulation results</h2>
-            <textarea id="results" class="col-sm-12" rows="23"></textarea>
+            <textarea id="results" class="col-sm-12 text-monospace" rows="23"></textarea>
         </div>
 
         <br><br>

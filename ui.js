@@ -25,15 +25,9 @@ $(function () {
         });
         return risks;
     }
+    const $riskRowTemplate = $('#risks').find('tbody').find('tr').clone();
     function addRisk() {
-        const $row = $(`
-        <tr>
-            <td><input type="number" min="0" max="100" name="likelihood"></input>%</td>
-            <td><input type="number" min="0" max="100" name="lowImpact"></input> tasks</td>
-            <td><input type="number" min="0" max="100" name="highImpact"></input> tasks</td>
-            <td><input type="text" name="description"></input></td>
-        </tr>
-        `);
+        const $row = $riskRowTemplate.clone();
         $('#risks').find('tbody').append($row);
         return $row;
     }
@@ -101,13 +95,16 @@ $(function () {
 
             // Report the results
             const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-            write(`This project will consume ${p85.Effort} dev-weeks of effort or less (85% confidence).\nYou can deliver this project in ${p85.Duration} calendar weeks or less (85% confidence)\n\n`);
+            write(`This project will consume up to ${p85.Effort} dev-weeks of effort (85% confidence).\n`);
+            write(`This project can be delivered in up to ${p85.Duration} calendar weeks (85% confidence)\n\n`);
             write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
             write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
-            write(`Error rates:\n * Weekly throughput: ${result.tpErrorRate}%\n * Lead-times: ${result.ltErrorRate}%\n   (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
+            write(`Error rates:\n - Weekly throughput: ${result.tpErrorRate}%\n - Lead-times: ${result.ltErrorRate}%\n (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
             write('All probabilities:\n')
+            write(`  Likelihood\tDuration\tTasks\tEffort       \tComment\n`);
             for (const res of result.resultsTable) {
-                write(`  Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\n`);
+                const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
+                write(`  ${res.Likelihood}%      \t${res.Duration} weeks \t${res.TotalTasks}\t${res.Effort} man-weeks\t(${comment})\n`);
             }
         }, 100);
 
