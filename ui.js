@@ -95,7 +95,7 @@ $(function () {
 
             // Report the results
             const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-            write(`This project will consume up to ${p85.Effort} dev-weeks of effort (85% confidence).\n`);
+            write(`This project will consume up to ${p85.Effort} man-weeks of effort (85% confidence).\n`);
             write(`This project can be delivered in up to ${p85.Duration} calendar weeks (85% confidence)\n\n`);
             write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
             write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
