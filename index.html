@@ -69,19 +69,19 @@
                     <h3> Project properties</h3>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-teamName">Team name:</span>
+                            <span class="input-group-text" id="label-teamName">Team name</span>
                         </div>
                         <input type="text" id="teamName" class="form-control" aria-describedby="label-teamName" />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-projectName">Project name:</span>
+                            <span class="input-group-text" id="label-projectName">Project name</span>
                         </div>
                         <input type="text" id="projectName" class="form-control" aria-describedby="label-projectName" />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-totalContributors">Team size:</span>
+                            <span class="input-group-text" id="label-totalContributors">Team size<span style="color:red">*</span></span>
                         </div>
                         <input type="number" min="1" max="9999" id="totalContributors" value="1" data-toggle="tooltip"
                             data-html="true" data-placement="right" class="form-control"
@@ -93,7 +93,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-numberOfTasks">Number of tasks:</span>
+                            <span class="input-group-text" id="label-numberOfTasks">Number of tasks<span style="color:red">*</span></span>
                         </div>
                         <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
                             data-html="true" data-placement="right" class="form-control"
@@ -105,7 +105,7 @@
                     <h3>Simulation properties</h3>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-numberOfSimulations">Number of simulations:</span>
+                            <span class="input-group-text" id="label-numberOfSimulations">Number of simulations<span style="color:red">*</span></span>
                         </div>
                         <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="500000"
                             data-toggle="tooltip" data-html="true" data-placement="left" class="form-control"
@@ -114,7 +114,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-sCurveSize">"S-Curve" size:</span>
+                            <span class="input-group-text" id="label-sCurveSize">"S-Curve" size</span>
                         </div>
                         <input type="number" min="0" max="50" id="sCurveSize" value="20" data-toggle="tooltip"
                             data-html="true" data-placement="left" class="form-control"
@@ -126,7 +126,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-minContributors">Minimum contributors:</span>
+                            <span class="input-group-text" id="label-minContributors">Minimum contributors</span>
                         </div>
                         <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip"
                             data-html="true" data-placement="left" class="form-control"
@@ -135,7 +135,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-maxContributors">Maximum contributors:</span>
+                            <span class="input-group-text" id="label-maxContributors">Maximum contributors</span>
                         </div>
                         <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip"
                             data-html="true" data-placement="left" class="form-control"
@@ -144,28 +144,26 @@
                     </div>
                 </div>
             </div>
-        </div><br>
+            <p>(Fields marked with a red <span style="color:red">*</span> are mandatory)</p>
+        </div>
 
         <div class="container-fluid bg-12 text-center">
             <h1>Historical data</h1>
             <div class="row">
                 <div class="col-sm-4">
-                    <h3>Weekly throughput</h3>
-                    <p>(Mandatory)</p>
+                    <h4>Weekly throughput<span style="color:red">*</span></h4>
                     <textarea id="tpSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
                         data-placement="right" class="form-control text-monospace"
                         title="Paste here your historical data of <u>weekly throughput</u>. It is very important that this data represents only throughput of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas<br/><br/>Minimum: 7 weeks of data. Maximum: 24 weeks of data"></textarea>
                 </div>
                 <div class="col-sm-4">
-                    <h3>Task lead-times</h3>
-                    <p>(Optional)</p>
+                    <h4>Task lead-times</h4>
                     <textarea id="ltSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
                         data-placement="left" class="form-control text-monospace"
                         title="Optionally paste here your historical data of tasks <u>lead-time</u> (a.k.a cycle time) - one entry per task. It is very important that this data represents only the lead-time of project-related tasks (not including bug-fixes, external requests, etc).<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
                 </div>
                 <div class="col-sm-4">
-                    <h3>Projects split rates</h3>
-                    <p>(Optional)</p>
+                    <h4>Projects split rates</h4>
                     <textarea id="splitRateSamples" rows="4" cols="35" data-toggle="tooltip" data-html="true"
                         data-placement="left" class="form-control text-monospace"
                         title="Optionally paste here your historical data of project's <u>split rates</u> (actual tasks quantity at the end of the project divided by the originally planned tasks quantity) - one entry per project.<br>For a 10% split rate in a project, you should put '1.1', for example.<br/><br/>Values can be separated by spaces, lines or commas"></textarea>
