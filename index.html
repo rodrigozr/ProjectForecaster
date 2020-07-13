@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="bootstrap.min.css">
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
-    
+
     <style>
         /* Remove the navbar's default margin-bottom and rounded borders */
         .navbar {
@@ -28,22 +28,24 @@
 
     <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
         <a class="navbar-brand" href="#">Project Forecaster</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
-            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-expanded="false"
+            aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Documentation</a>
+                    <a class="nav-link"
+                        href="https://github.com/rodrigozr/ProjectForecaster/blob/master/README.md">Documentation</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="dropdown01" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">Feedback</a>
                     <div class="dropdown-menu" aria-labelledby="dropdown01">
-                        <a class="dropdown-item" href="#">Issues</a>
-                        <a class="dropdown-item" href="#">Contribute</a>
+                        <a class="dropdown-item" href="https://github.com/rodrigozr/ProjectForecaster/issues">Issues</a>
+                        <a class="dropdown-item"
+                            href="https://github.com/rodrigozr/ProjectForecaster/blob/master/CONTRIBUTING.md">Contribute</a>
                     </div>
                 </li>
             </ul>
@@ -76,16 +78,11 @@
                         title="Total number of <u>individual contributors</u> on this team or service.<br/>It is CRUCIAL that this number represents the number of contributors which generated the weekly throughput samples in the section below" />
                     (mandatory)
                     <br />
-                    <label for="minContributors">Minimum contributors: </label>
-                    <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip" data-html="true"
-                        data-placement="right"
-                        title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
-                    <br />
-                    <label for="maxContributors">Maximum contributors: </label>
-                    <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip" data-html="true"
-                        data-placement="right"
-                        title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism).<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
-
+                    <label for="numberOfTasks">Number of tasks: </label>
+                    <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
+                        data-html="true" data-placement="right"
+                        title="Number of tasks estimated for this project.<br/><br/>Notice that tasks should be within a reasonable range of size (up to 400% difference in sizes is usually fine). It doesn't matter how you are breaking down your projects, as long as tasks sizes are within this range. This could be user stories, or any other granular level that makes sense to you." />
+                    (mandatory)
                 </div>
                 <div class="col-sm-6 text-left">
                     <h3>Simulation properties</h3>
@@ -100,17 +97,21 @@
                         title="Size of the S-Curve in the beginning and end of the project. Empirical evidence demonstrates that most projects have lower productivity in the first 20% and last 20% of the project<br/><br/>Minimum: 0%, Default: 20%, Max: 50%" />
                     %
                     <br />
-                    <label for="numberOfTasks">Number of tasks: </label>
-                    <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
-                        data-html="true" data-placement="right"
-                        title="Number of tasks estimated for this project (between &quot;cats and camels&quot;)" />
-                    (mandatory)
+                    <label for="minContributors">Minimum contributors: </label>
+                    <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip" data-html="true"
+                        data-placement="right"
+                        title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    <br />
+                    <label for="maxContributors">Maximum contributors: </label>
+                    <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip" data-html="true"
+                        data-placement="right"
+                        title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism).<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
                 </div>
             </div>
         </div><br>
 
         <div class="container-fluid bg-12 text-center">
-            <h2>Historical data</h2>
+            <h1>Historical data</h1>
             <div class="row">
                 <div class="col-sm-4">
                     <h3>Weekly throughput</h3>
@@ -179,10 +180,11 @@
         <br><br>
     </main>
 
-
-
     <footer class="container-fluid text-center">
-        <p>Created by <a href="https://edu.kanban.university/users/rodrigo-rosauro">Rodrigo Rosauro</a>. Inspired by Troy Magennis' <a href="https://github.com/FocusedObjective/FocusedObjective.Resources/blob/master/Spreadsheets/Throughput%20Forecaster.xlsx">Throughput Forecaster</a></p>
+        <p>Created by <a href="https://edu.kanban.university/users/rodrigo-rosauro">Rodrigo Rosauro</a>. Inspired by
+            Troy Magennis' <a
+                href="https://github.com/FocusedObjective/FocusedObjective.Resources/blob/master/Spreadsheets/Throughput%20Forecaster.xlsx">Throughput
+                Forecaster</a></p>
     </footer>
 
 </body>

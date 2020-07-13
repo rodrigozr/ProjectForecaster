@@ -84,20 +84,35 @@ $(function () {
     $('#run').on('click', function () {
         const simulationData = readSimulationData();
         if (!simulationData) return;
+        loadDataFromUrl();
 
-        // Run the simulation
-        const result = runMonteCarloSimulation(simulationData);
         $('#results-main').show();
         const $results = $('#results');
-        const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-        $results.val(`This project will consume ${p85.Effort} dev-weeks of effort or less (85% confidence).\nYou can deliver this project in ${p85.Duration} calendar weeks or less (85% confidence)\n\n`);
-        $results.val($results.val() + `-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
-        $results.val($results.val() + `Error rate - TP: ${result.tpErrorRate}%, LT: ${result.ltErrorRate}% (Aim to keep this below 25%. By adding more sample data. Lower is better)\n\n`);
-        for (const res of result.resultsTable) {
-            $results.val($results.val() + `Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\n`);
-        }
+        $results.val('');
+        const write = str => $results.val($results.val() + str);
+        write('Running...')
+
+        setTimeout(() => {
+            // Run the simulation
+            const startTime = Date.now();
+            const result = runMonteCarloSimulation(simulationData);
+            const elapsed = Date.now() - startTime;
+            $results.val('');
+
+            // Report the results
+            const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
+            write(`This project will consume ${p85.Effort} dev-weeks of effort or less (85% confidence).\nYou can deliver this project in ${p85.Duration} calendar weeks or less (85% confidence)\n\n`);
+            write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
+            write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
+            write(`Error rates:\n * Weekly throughput: ${result.tpErrorRate}%\n * Lead-times: ${result.ltErrorRate}%\n   (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
+            write('All probabilities:\n')
+            for (const res of result.resultsTable) {
+                write(`  Likelihood: ${res.Likelihood}%\tDuration: ${res.Duration}\tTotalTasks: ${res.TotalTasks}\tEffort: ${res.Effort}\n`);
+            }
+        }, 100);
+
     });
-    if (location.hash && location.hash.trim().length > 1) {
+    function loadDataFromUrl() {
         try {
             const simulationData = JSON.parse(atob(location.hash.trim().substring(1)));
             for (const name of Object.getOwnPropertyNames(simulationData)) {
@@ -106,17 +121,17 @@ $(function () {
                     $el.val(typeof (simulationData[name]) == 'Array' ? simulationData[name].join(',') : simulationData[name]);
                 }
             }
-            if (simulationData.risks.length > 0) {
-                for (let i = 0; i < simulationData.risks.length; i++) {
-                    const risk = simulationData.risks[i];
-                    fillRisk(risk, i == 0 ? $('#risks').find('tbody').find('tr') : addRisk());
-                }
+            $('#risks').find('tbody').find('tr').remove();
+            if (simulationData.risks && simulationData.risks.length > 0) {
                 for (const risk of simulationData.risks) {
-
+                    fillRisk(risk, addRisk());
                 }
             }
         } catch (error) {
             console.error(error);
         }
+    }
+    if (location.hash && location.hash.trim().length > 1) {
+        loadDataFromUrl();
     }
 });
