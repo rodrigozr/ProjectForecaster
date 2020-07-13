@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install && cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/jquery/dist/jquery.min.js node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./ && npm run webapp",
-    "webapp": "rm -rf webapp; mkdir webapp && cp *.html *.css *.js webapp/"
+    "webapp": "rm -rf webapp; mkdir webapp && cp *.html *.css *.js *.png webapp/"
   },
   "author": "Rodrigo Rosauro",
   "license": "MIT",
