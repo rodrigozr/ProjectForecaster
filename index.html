@@ -6,6 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="Chart.min.css">
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
     <link rel="icon" type="image/png" href="favicon.png">
@@ -247,7 +248,38 @@
                 simulation</button>
         </div>
         <div id="results-main" class="container-fluid bg-12 text-center" style="display:none">
-            <h2>Simulation results</h2>
+            <h1>Simulation results</h1>
+            <div class="col-sm-4 text-left">
+                <h3>Forecast summary:</h3>
+                <p><i>(with 85% of confidence)</i></p>
+                <div class="input-group mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text font-weight-bold" id="label-res-effort">Effort:</span>
+                    </div>
+                    <input type="text" id="res-effort" class="form-control" aria-describedby="label-res-effort"/>
+                    <div class="input-group-append">
+                        <span class="input-group-text">person-weeks</span>
+                    </div>
+                </div>
+                <div class="input-group mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text font-weight-bold" id="label-res-duration">Duration:</span>
+                    </div>
+                    <input type="text" id="res-duration" class="form-control" aria-describedby="label-res-duration"/>
+                    <div class="input-group-append">
+                        <span class="input-group-text">calendar weeks</span>
+                    </div>
+                </div>
+                <div class="input-group mb-1">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text font-weight-bold" id="label-res-endDate">Delivery date:</span>
+                    </div>
+                    <input type="text" id="res-endDate" class="form-control" aria-describedby="label-res-endDate"/>
+                </div>
+            </div>
+            <h3>Charts</h3>
+            <canvas id="res-duration-histogram"></canvas>
+            <h3>Simulation report</h3>
             <textarea id="results" class="col-sm-12 text-monospace" rows="23"></textarea>
         </div>
 
@@ -270,7 +302,9 @@
     </footer>
 
 </body>
-<script src="monte_carlo.js"></script>
 <script src="ui.js" async="async"></script>
+<script src="Chart.bundle.min.js" async="async"></script>
+<script src="monte_carlo.js" async="async"></script>
+<script src="draw-charts.js" async="async"></script>
 
 </html>

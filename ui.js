@@ -87,7 +87,7 @@ $(function () {
         const $results = $('#results');
         $results.val('');
         const write = str => $results.val($results.val() + str);
-        write('Running...')
+        $('#res-effort').val('Running...');
 
         setTimeout(() => {
             // Run the simulation
@@ -98,12 +98,20 @@ $(function () {
 
             // Report the results
             const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
+            $('#res-effort').val(p85.Effort);
+            $('#res-duration').val(p85.Duration);
+            let endDate = '(No start date set)';
+            if (simulationData.startDate) {
+                const oneWeek = 1000 * 60 * 60 * 24 * 7;
+                endDate = new Date(new Date(simulationData.startDate).getTime() + (p85.Duration * oneWeek)).toDateString();
+            }
+            $('#res-endDate').val(endDate);
+            drawHistogram('res-duration-histogram', result.durationHistogram);
+
             write(`Project forecast summary (with 85% of confidence):\n`);
             write(` - Up to ${p85.Effort} person-weeks of effort\n`);
             write(` - Can be delivered in up to ${p85.Duration} calendar weeks\n`);
             if (simulationData.startDate) {
-                const oneWeek = 1000 * 60 * 60 * 24 * 7;
-                const endDate = new Date(new Date(simulationData.startDate).getTime() + (p85.Duration * oneWeek)).toDateString();
                 write(` - Can be delivered by ${endDate}\n`);
             }
             write(`\n\n`);
@@ -154,4 +162,5 @@ $(function () {
             location.reload();
         }
     }
+
 });

@@ -4,7 +4,11 @@
   "description": "Forecast probabilities of a project's effort and duration using Monte Carlo simulations",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/jquery/dist/jquery.min.js node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./ && npm run webapp",
+    "build": "npm install && npm run copy-all && npm run webapp",
+    "copy-all": "npm run copy-chart && npm run copy-jquery && npm run copy-bootstrap",
+    "copy-chart": "cp node_modules/chart.js/dist/Chart.bundle.min.js node_modules/chart.js/dist/Chart.min.css ./",
+    "copy-jquery": "cp node_modules/jquery/dist/jquery.min.js ./",
+    "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./",
     "webapp": "rm -rf webapp; mkdir webapp && cp *.html *.css *.js *.png webapp/"
   },
   "author": "Rodrigo Rosauro",
@@ -15,6 +19,7 @@
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
+    "chart.js": "^2.9.3",
     "jquery": "^3.5.1"
   }
 }
