@@ -148,6 +148,15 @@
                             aria-describedby="label-minContributors"
                             title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism). Cannot be higher than the 'Team size'.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
                     </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-startDate">Start date</span>
+                        </div>
+                        <input type="date" id="startDate" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-startDate"
+                            title="<u>Optional:</u> Planned start date for this project. Set this if you want to calculate a planned end date" />
+                    </div>
                 </div>
             </div>
             <p><i>(Fields marked with a red <span style="color:red">*</span> are mandatory)</i></p>
@@ -183,43 +192,43 @@
             <div class="row">
                 <table id="risks" class="table table-sm">
                     <thead>
-                        <tr>
-                            <th scope="col">Likelihood</th>
-                            <th scope="col">Low impact</th>
-                            <th scope="col">High impact</th>
-                            <th scope="col">Description</th>
+                        <tr class="d-flex">
+                            <th scope="col" class="col-2">Likelihood</th>
+                            <th scope="col" class="col-2">Low impact</th>
+                            <th scope="col" class="col-2">High impact</th>
+                            <th scope="col" class="col-6">Description</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>
+                        <tr class="d-flex">
+                            <td class="col-2">
                                 <div class="input-group mb-3">
                                     <input type="number" min="1" max="100" class="form-control"
                                         name="likelihood"></input>
-                                    <div class="input-group-append">
+                                    <div class="input-group-append d-none d-md-block">
                                         <span class="input-group-text">%</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="col-2">
                                 <div class="input-group mb-3">
                                     <input type="number" min="0" max="100" class="form-control"
                                         name="lowImpact"></input>
-                                    <div class="input-group-append">
+                                    <div class="input-group-append d-none d-lg-block">
                                         <span class="input-group-text">tasks</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>
+                            <td class="col-2">
                                 <div class="input-group mb-3">
                                     <input type="number" min="1" max="100" class="form-control"
                                         name="highImpact"></input>
-                                    <div class="input-group-append">
+                                    <div class="input-group-append d-none d-lg-block">
                                         <span class="input-group-text">tasks</span>
                                     </div>
                                 </div>
                             </td>
-                            <td><input type="text" class="form-control" name="description"></input></td>
+                            <td class="col-6"><input type="text" class="form-control" name="description"></input></td>
                         </tr>
                     </tbody>
                 </table>
