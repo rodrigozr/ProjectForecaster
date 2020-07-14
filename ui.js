@@ -106,16 +106,23 @@ $(function () {
                 const endDate = new Date(new Date(simulationData.startDate).getTime() + (p85.Duration * oneWeek)).toDateString();
                 write(` - Can be delivered by ${endDate}\n`);
             }
-            write(`\n`);
-            write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
+            write(`\n\n`);
+            write(`-----------------------------------------------------\n`);
+            write(`                       DETAILS\n`);
+            write(`-----------------------------------------------------\n`);
             write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
-            write(`Error rates:\n - Weekly throughput: ${result.tpErrorRate}%\n - Lead-times: ${result.ltErrorRate}%\n (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
             write('All probabilities:\n')
             write(`  Likelihood\tDuration\tTasks\tEffort          \tComment\n`);
             for (const res of result.resultsTable) {
                 const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
                 write(`  ${res.Likelihood}%      \t${res.Duration} weeks \t${res.TotalTasks}\t${res.Effort} person-weeks  \t(${comment})\n`);
             }
+            write(`\n`);
+            write(`Error rates:\n - Weekly throughput: ${result.tpErrorRate}%\n - Task lead-times: ${result.ltErrorRate}%\n`);
+            write(`  (Aim to keep these below 25% by adding more sample data. (< 10% Great, < 25% Good)\n`);
+            write(`   This is the measure of how two random groups of your sample data would align when forecasting.\n`);
+            write(`   Anything below 25% is good, but lower is better. It grows if there is too little data\n`);
+            write(`   and ALSO if the process changes over time and you use too much data.)\n`);
         }, 100);
 
     });
