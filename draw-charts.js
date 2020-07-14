@@ -19,7 +19,7 @@ function drawHistogram(id, durations) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Duration in calendar weeks',
+                label: 'Duration histogram',
                 data: data,
                 borderWidth: 1,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
