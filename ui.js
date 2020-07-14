@@ -59,6 +59,7 @@ $(function () {
             minContributors: parseInt($('#minContributors').val()),
             maxContributors: parseInt($('#maxContributors').val()),
             sCurveSize: parseInt($('#sCurveSize').val()),
+            startDate: $('#startDate').val() || undefined
         };
         if (!simulationData.tpSamples.some(n => n >= 1)) {
             alert("Must have at least one weekly throughput sample greater than zero");
@@ -97,8 +98,15 @@ $(function () {
 
             // Report the results
             const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-            write(`This project will consume up to ${p85.Effort} person-weeks of effort (85% of confidence).\n`);
-            write(`This project can be delivered in up to ${p85.Duration} calendar weeks (85% of confidence)\n\n`);
+            write(`Project forecast summary (with 85% of confidence):\n`);
+            write(` - Up to ${p85.Effort} person-weeks of effort\n`);
+            write(` - Can be delivered in up to ${p85.Duration} calendar weeks\n`);
+            if (simulationData.startDate) {
+                const oneWeek = 1000 * 60 * 60 * 24 * 7;
+                const endDate = new Date(new Date(simulationData.startDate).getTime() + (p85.Duration * oneWeek)).toDateString();
+                write(` - Can be delivered by ${endDate}\n`);
+            }
+            write(`\n`);
             write(`-----------------------------------------------------\nDETAILS:\n-----------------------------------------------------\n`);
             write(`Elapsed time: ${elapsed} ms (${Math.round(simulationData.numberOfSimulations / elapsed * 1000)} simulations per second)\n`);
             write(`Error rates:\n - Weekly throughput: ${result.tpErrorRate}%\n - Lead-times: ${result.ltErrorRate}%\n (Aim to keep these below 25% by adding more sample data. Lower is better)\n\n`);
