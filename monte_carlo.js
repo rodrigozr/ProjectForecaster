@@ -146,12 +146,15 @@ function simulateBurnDown(simulationData) {
     let weekNumber = 0
     const simulatedTp = [];
     let effortWeeks = 0;
+    let partialTp = 0;
 
     // Run the simulation
     while (remainingTasks > 0) {
         const randomTp = randomElement(tpSamples);
         const contributorsThisWeek = weekNumber >= idealWeeks ? maxContributors : contributorsDistribution[Math.min(99, Math.round(100 * weekNumber / idealWeeks))];
-        const actualTp = Math.round(randomTp * (contributorsThisWeek / totalContributors));
+        const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors)) + partialTp;
+        const actualTp = Math.floor(adjustedTp);
+        partialTp = (actualTp < adjustedTp) ? (adjustedTp - actualTp) : 0;
         simulatedTp.push(actualTp);
         remainingTasks -= actualTp;
         durationInCalendarWeeks++;
