@@ -180,7 +180,12 @@ function runMonteCarloSimulation(simulationData) {
     const tasksHistogram = [];
     const ltHistogram = [];
     const effortHistogram = [];
-    
+
+    simulationData = {...simulationData};
+    for (const risk of simulationData.risks) {
+        if (risk.likelihood >= 1) risk.likelihood /= 100;
+    }
+
     const { numberOfSimulations } = simulationData;
     for (let i = 0; i < numberOfSimulations; i++) {
         const res = simulateBurnDown(simulationData);
