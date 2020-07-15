@@ -151,7 +151,7 @@ function simulateBurnDown(simulationData) {
         const percentComplete = Math.max(0, Math.round((totalTasks - remainingTasks) / totalTasks * 100));
         const contributorsThisWeek = contributorsDistribution[percentComplete];
         const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors)) + partialTp;
-        const actualTp = Math.floor(adjustedTp);
+        const actualTp = Math.round(adjustedTp);
         partialTp = (actualTp < adjustedTp) ? (adjustedTp - actualTp) : 0;
         simulatedTp.push(actualTp);
         remainingTasks -= actualTp;
