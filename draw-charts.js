@@ -139,3 +139,67 @@ function drawBurnDowns(id, burnDowns) {
         }
     });
 }
+
+function drawScatterPlot(id, values, linePercentile = 85) {
+    if (chartsCache[id]) {
+        chartsCache[id].destroy();
+        chartsCache[id] = null;
+    }
+    const data = values.slice(0, 500).map((val, index) => ({x: index, y: val}))
+    const lineValue = Math.round(percentile(values, linePercentile/100, true));
+    const ctx = document.getElementById(id).getContext('2d');
+
+    chartsCache[id] = new Chart(ctx, {
+        type: 'scatter',
+        data: {
+            //labels: labels,
+            datasets: [{
+                data: data,
+                //borderWidth: 1,
+                pointBackgroundColor: 'rgba(54, 162, 235, 0.2)',
+                pointBorderColor: 'rgba(54, 162, 235, 1)',
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: "Effort scatter plot (first 500 runs)"
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                mode: 'disabled'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Effort in person-weeks'
+                    }
+                }]
+            },
+            annotation: {
+                drawTime: 'afterDraw',
+                annotations: [{
+                    type: 'line',
+                    mode: 'horizontal',
+                    value: lineValue,
+                    scaleID: 'y-axis-1',
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    borderDash: [2, 2],
+                    label: {
+                        enabled: true,
+                        content: `p${linePercentile}`,
+                        fontSize: 10,
+                        backgroundColor: 'rgba(0,0,0,0.6)',
+                    }
+                }]
+            }
+        }
+    });
+}

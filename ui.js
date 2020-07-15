@@ -111,6 +111,7 @@ $(function () {
             $('#res-endDate').val(endDate);
             drawHistogram('res-duration-histogram', result.simulations.map(s => s.durationInCalendarWeeks), confidenceLevel);
             drawBurnDowns('res-burn-downs', result.burnDowns);
+            drawScatterPlot('res-effort-scatter-plot', result.simulations.map(s => s.effortWeeks), confidenceLevel);
 
             write(`Project forecast summary (with ${confidenceLevel}% of confidence):\n`);
             write(` - Up to ${effort} person-weeks of effort\n`);
