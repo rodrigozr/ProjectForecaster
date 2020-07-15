@@ -19,14 +19,20 @@ function drawHistogram(id, durations) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Duration histogram',
                 data: data,
                 borderWidth: 1,
                 backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',                
+                borderColor: 'rgba(54, 162, 235, 1)',
             }]
         },
         options: {
+            title: {
+                display: true,
+                text: "Duration histogram"
+            },
+            legend: {
+                display: false
+            },
             tooltips: {
                 mode: 'disabled'
             },
@@ -34,6 +40,10 @@ function drawHistogram(id, durations) {
                 yAxes: [{
                     ticks: {
                         beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Frequency of occurrences'
                     }
                 }],
                 xAxes: [
@@ -41,6 +51,66 @@ function drawHistogram(id, durations) {
                         scaleLabel: {
                             display: true,
                             labelString: 'Calendar weeks'
+                        }
+                    }
+                ]
+            }
+        }
+    });
+}
+
+function drawBurnDowns(id, burnDowns) {
+    if (chartsCache[id]) {
+        chartsCache[id].destroy();
+        chartsCache[id] = null;
+    }
+    const ctx = document.getElementById(id).getContext('2d');
+    const max = Math.max(...burnDowns.map(b => b.length));
+    const labels = []
+    for (let i = 1; i <= max; i++) {
+        labels.push(i.toString());
+    }
+    const datasets = burnDowns.map(burnDown => ({
+        label: { mode: 'disabled' },
+        data: burnDown,
+        fill: false,
+        borderWidth: 1,
+        pointRadius: 0,
+        pointHoverRadius: 0,
+    }));
+
+    chartsCache[id] = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: datasets
+        },
+        options: {
+            title: {
+                display: true,
+                text: "First 100 burn downs"
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                mode: 'disabled'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Remaining tasks'
+                    }
+                }],
+                xAxes: [
+                    {
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Week number'
                         }
                     }
                 ]

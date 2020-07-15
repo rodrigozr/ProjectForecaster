@@ -107,6 +107,7 @@ $(function () {
             }
             $('#res-endDate').val(endDate);
             drawHistogram('res-duration-histogram', result.durationHistogram);
+            drawBurnDowns('res-burn-downs', result.burnDowns);
 
             write(`Project forecast summary (with 85% of confidence):\n`);
             write(` - Up to ${p85.Effort} person-weeks of effort\n`);

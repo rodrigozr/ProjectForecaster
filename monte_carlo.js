@@ -60,7 +60,7 @@ function randomSampleAverage(array, minNumberOfItems, maxNumberOfItems) {
     for (let i = 0; i < numberOfItems; i++) {
         total += randomElement(array);
     }
-    return Math.round(total / numberOfItems);
+    return (total / numberOfItems);
 }
 
 /**
@@ -121,7 +121,7 @@ function simulateBurnDown(simulationData) {
     const { tpSamples, ltSamples, splitRateSamples, risks, numberOfTasks, totalContributors, maxContributors, contributorsDistribution } = simulationData;
 
     // Retrieve a random split rate for this round
-    const randomSplitRate = randomElement(splitRateSamples) || 1.0;
+    const randomSplitRate = randomSampleAverage(splitRateSamples, 1, splitRateSamples.length) || 1.0;
 
     // Calculate random impacts for this round
     let impactTasks = 0;
@@ -149,7 +149,9 @@ function simulateBurnDown(simulationData) {
     let partialTp = 0;
 
     // Run the simulation
+    const burnDown = [];
     while (remainingTasks > 0) {
+        burnDown.push(remainingTasks);
         const randomTp = randomElement(tpSamples);
         const contributorsThisWeek = weekNumber >= idealWeeks ? maxContributors : contributorsDistribution[Math.min(99, Math.round(100 * weekNumber / idealWeeks))];
         const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors)) + partialTp;
@@ -161,12 +163,14 @@ function simulateBurnDown(simulationData) {
         weekNumber++;
         effortWeeks += contributorsThisWeek;
     }
+    burnDown.push(0);
     return {
         totalTasks,
         durationInCalendarWeeks,
         simulatedTp,
         leadTime,
         effortWeeks,
+        burnDown,
     }
 }
 
@@ -187,12 +191,16 @@ function runMonteCarloSimulation(simulationData) {
     }
 
     const { numberOfSimulations } = simulationData;
+    const burnDowns = [];
     for (let i = 0; i < numberOfSimulations; i++) {
         const res = simulateBurnDown(simulationData);
         durationHistogram.push(res.durationInCalendarWeeks);
         tasksHistogram.push(res.totalTasks);
         ltHistogram.push(res.leadTime);
         effortHistogram.push(res.effortWeeks);
+        if (i < 100) {
+            burnDowns.push(res.burnDown);
+        }
     }
     sortNumbers(durationHistogram);
     sortNumbers(tasksHistogram);
@@ -226,6 +234,7 @@ function runMonteCarloSimulation(simulationData) {
         effortHistogram,
         tpErrorRate,
         ltErrorRate,
+        burnDowns,
         resultsTable,
     }
 }
