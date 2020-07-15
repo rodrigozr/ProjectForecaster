@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="Chart.min.css">
     <script src="jquery.min.js"></script>
     <script src="bootstrap.bundle.min.js"></script>
+    <script src="Chart.bundle.min.js"></script>
     <link rel="icon" type="image/png" href="favicon.png">
 
     <style>
@@ -73,12 +74,6 @@
                     <h3> Project properties</h3>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-teamName">Team name</span>
-                        </div>
-                        <input type="text" id="teamName" class="form-control" aria-describedby="label-teamName" />
-                    </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
                             <span class="input-group-text" id="label-projectName">Project name</span>
                         </div>
                         <input type="text" id="projectName" class="form-control" aria-describedby="label-projectName" />
@@ -95,6 +90,24 @@
                         <div class="input-group-append">
                             <span class="input-group-text">contributors</span>
                         </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-minContributors">Minimum contributors</span>
+                        </div>
+                        <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-minContributors"
+                            title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="label-maxContributors">Maximum contributors</span>
+                        </div>
+                        <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip"
+                            data-html="true" data-placement="left" class="form-control"
+                            aria-describedby="label-minContributors"
+                            title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism). Cannot be higher than the 'Team size'.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -133,21 +146,15 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-minContributors">Minimum contributors</span>
+                            <span class="input-group-text" id="label-confidenceLevel">Confidence level</span>
                         </div>
-                        <input type="number" min="1" max="9999" id="minContributors" data-toggle="tooltip"
+                        <input type="number" min="1" max="99" id="confidenceLevel" value="85" data-toggle="tooltip"
                             data-html="true" data-placement="left" class="form-control"
-                            aria-describedby="label-minContributors"
-                            title="Minimum number of <u>individual contributors</u> who will start working in the project.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
-                    </div>
-                    <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-maxContributors">Maximum contributors</span>
+                            aria-describedby="label-confidenceLevel"
+                            title="Level of confidence to report in the results.<br/><br/>Minimum: 1%, Default: 85%, Max: 99%" />
+                        <div class="input-group-append">
+                            <span class="input-group-text">%</span>
                         </div>
-                        <input type="number" min="1" max="9999" id="maxContributors" data-toggle="tooltip"
-                            data-html="true" data-placement="left" class="form-control"
-                            aria-describedby="label-minContributors"
-                            title="Maximum number of <u>individual contributors</u> who can work in the project (maximum parallelism). Cannot be higher than the 'Team size'.<br/><br/>This is used to model the project's S-curve to forecast the project duration in calendar weeks<br/><br/><u>Optional:</u> If you only want to forecast the project effort, this is not necessary, so you can leave it empty." />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -251,7 +258,6 @@
             <h1>Simulation results</h1>
             <div class="col-sm-4 text-left">
                 <h3>Forecast summary:</h3>
-                <p><i>(with 85% of confidence)</i></p>
                 <div class="input-group mb-1">
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="label-res-effort">Effort:</span>
@@ -304,8 +310,8 @@
 
 </body>
 <script src="ui.js" async="async"></script>
-<script src="Chart.bundle.min.js" async="async"></script>
 <script src="monte_carlo.js" async="async"></script>
 <script src="draw-charts.js" async="async"></script>
+<script src="chartjs-plugin-annotation.min.js" async="async"></script>
 
 </html>

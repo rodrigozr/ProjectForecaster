@@ -1,10 +1,11 @@
 const chartsCache = {};
 
-function drawHistogram(id, durations) {
+function drawHistogram(id, durations, linePercentile = 85) {
     if (chartsCache[id]) {
         chartsCache[id].destroy();
         chartsCache[id] = null;
     }
+    const lineValue = Math.round(percentile(durations, linePercentile/100, true));
     const ctx = document.getElementById(id).getContext('2d');
     const histogram = {};
     for (const val of durations) {
@@ -54,6 +55,26 @@ function drawHistogram(id, durations) {
                         }
                     }
                 ]
+            },
+            annotation: {
+                drawTime: 'afterDraw',
+                annotations: [{
+                    type: 'line',
+                    mode: 'vertical',
+                    value: lineValue.toString(),
+                    scaleID: 'x-axis-0',
+                    borderColor: 'red',
+                    borderWidth: 2,
+                    borderDash: [2, 2],
+                    label: {
+                        enabled: true,
+                        content: `p${linePercentile}`,
+                        position: 'top',
+                        yAdjust: 10,
+                        fontSize: 10,
+                        backgroundColor: 'rgba(0,0,0,0.6)',
+                    }
+                }]
             }
         }
     });

@@ -3,11 +3,13 @@
  * "Linear interpolation between closest ranks" method
  * @param {Array} arr sorted numeric array
  * @param {Number} p percentile number between 0 (p0) and 1 (p100)
+ * @param {Boolean} sort if true, the array will be sorted for you
  * @returns the value at a given percentile
  */
-function percentile(arr, p) {
+function percentile(arr, p, sort = false) {
     if (arr.length === 0) return 0;
     if (typeof p !== 'number') throw new TypeError('p must be a number');
+    if (sort) sortNumbers(arr);
     if (p <= 0) return arr[0];
     if (p >= 1) return arr[arr.length - 1];
 
@@ -176,11 +178,6 @@ function simulateBurnDown(simulationData) {
  * @returns result of the simulation
  */
 function runMonteCarloSimulation(simulationData) {
-    const durationHistogram = [];
-    const tasksHistogram = [];
-    const ltHistogram = [];
-    const effortHistogram = [];
-
     simulationData = {...simulationData};
     for (const risk of simulationData.risks) {
         if (risk.likelihood >= 1) risk.likelihood /= 100;
@@ -188,23 +185,24 @@ function runMonteCarloSimulation(simulationData) {
 
     const { numberOfSimulations } = simulationData;
     const burnDowns = [];
+    const simulations = [];
     for (let i = 0; i < numberOfSimulations; i++) {
         const res = simulateBurnDown(simulationData);
-        durationHistogram.push(res.durationInCalendarWeeks);
-        tasksHistogram.push(res.totalTasks);
-        ltHistogram.push(res.leadTime);
-        effortHistogram.push(res.effortWeeks);
+        simulations.push({
+            durationInCalendarWeeks: res.durationInCalendarWeeks,
+            totalTasks: res.totalTasks,
+            leadTime: res.leadTime,
+            effortWeeks: res.effortWeeks,
+        });
         if (i < 100) {
             burnDowns.push(res.burnDown);
         }
     }
-    sortNumbers(durationHistogram);
-    sortNumbers(tasksHistogram);
-    sortNumbers(ltHistogram);
-    sortNumbers(effortHistogram);
 
-    const tpErrorRate = errorRate(simulationData.tpSamples);
-    const ltErrorRate = errorRate(simulationData.ltSamples);
+   const durationHistogram = sortNumbers(simulations.map(s => s.durationInCalendarWeeks));
+   const tasksHistogram = sortNumbers(simulations.map(s => s.totalTasks));
+   const ltHistogram = sortNumbers(simulations.map(s => s.leadTime));
+   const effortHistogram = sortNumbers(simulations.map(s => s.effortWeeks));
 
     let resultsTable = [];
     let p = 100;
@@ -223,14 +221,14 @@ function runMonteCarloSimulation(simulationData) {
         p -= 5;
     }
 
+    const tpErrorRate = errorRate(simulationData.tpSamples);
+    const ltErrorRate = errorRate(simulationData.ltSamples);
+
     return {
-        durationHistogram,
-        tasksHistogram,
-        ltHistogram,
-        effortHistogram,
+        simulations,
+        burnDowns,
         tpErrorRate,
         ltErrorRate,
-        burnDowns,
         resultsTable,
     }
 }

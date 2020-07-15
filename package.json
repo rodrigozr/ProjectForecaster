@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npm install && npm run copy-all && npm run webapp",
     "copy-all": "npm run copy-chart && npm run copy-jquery && npm run copy-bootstrap",
-    "copy-chart": "cp node_modules/chart.js/dist/Chart.bundle.min.js node_modules/chart.js/dist/Chart.min.css ./",
+    "copy-chart": "cp node_modules/chart.js/dist/Chart.bundle.min.js node_modules/chart.js/dist/Chart.min.css node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js ./",
     "copy-jquery": "cp node_modules/jquery/dist/jquery.min.js ./",
     "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./",
     "webapp": "rm -rf webapp; mkdir webapp && cp *.html *.css *.js *.png webapp/"
@@ -20,6 +20,7 @@
   "dependencies": {
     "bootstrap": "^4.5.0",
     "chart.js": "^2.9.3",
+    "chartjs-plugin-annotation": "^0.5.7",
     "jquery": "^3.5.1"
   }
 }

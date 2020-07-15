@@ -47,9 +47,9 @@ $(function () {
     let currentlyLoadedHash = null;
     function readSimulationData() {
         const simulationData = {
-            teamName: $('#teamName').val(),
             projectName: $('#projectName').val(),
             numberOfSimulations: parseInt($('#numberOfSimulations').val()),
+            confidenceLevel: parseInt($('#confidenceLevel').val()) || 85,
             tpSamples: parseSamples('#tpSamples'),
             ltSamples: parseSamples('#ltSamples'),
             splitRateSamples: parseSamples('#splitRateSamples'),
@@ -97,21 +97,24 @@ $(function () {
             $results.val('');
 
             // Report the results
-            const p85 = result.resultsTable.filter(r => r.Likelihood == 85).pop();
-            $('#res-effort').val(p85.Effort);
-            $('#res-duration').val(p85.Duration);
+            const confidenceLevel = simulationData.confidenceLevel;
+            const reportPercentile = confidenceLevel / 100;
+            const effort = Math.round(percentile(result.simulations.map(s => s.effortWeeks), reportPercentile, true));
+            const duration = Math.round(percentile(result.simulations.map(s => s.durationInCalendarWeeks), reportPercentile, true));
+            $('#res-effort').val(effort);
+            $('#res-duration').val(duration);
             let endDate = '(No start date set)';
             if (simulationData.startDate) {
                 const oneWeek = 1000 * 60 * 60 * 24 * 7;
-                endDate = new Date(new Date(simulationData.startDate).getTime() + (p85.Duration * oneWeek)).toDateString();
+                endDate = new Date(new Date(simulationData.startDate).getTime() + (duration * oneWeek)).toDateString();
             }
             $('#res-endDate').val(endDate);
-            drawHistogram('res-duration-histogram', result.durationHistogram);
+            drawHistogram('res-duration-histogram', result.simulations.map(s => s.durationInCalendarWeeks), confidenceLevel);
             drawBurnDowns('res-burn-downs', result.burnDowns);
 
-            write(`Project forecast summary (with 85% of confidence):\n`);
-            write(` - Up to ${p85.Effort} person-weeks of effort\n`);
-            write(` - Can be delivered in up to ${p85.Duration} calendar weeks\n`);
+            write(`Project forecast summary (with ${confidenceLevel}% of confidence):\n`);
+            write(` - Up to ${effort} person-weeks of effort\n`);
+            write(` - Can be delivered in up to ${duration} calendar weeks\n`);
             if (simulationData.startDate) {
                 write(` - Can be delivered by ${endDate}\n`);
             }
