@@ -134,26 +134,22 @@ function simulateBurnDown(simulationData) {
     // Calculate the number of tasks for this round
     const totalTasks = Math.round((numberOfTasks + impactTasks) * randomSplitRate);
 
-    // Calculate the "ideal number of weeks" based on the average throughput
-    // this is used to determine on which part of the "S-curve" we are during the simulation
-    const avgTp = tpSamples.reduce((a, b) => a + b, 0) / tpSamples.length;
-    const idealWeeks = Math.round(totalTasks / avgTp * maxContributors / totalContributors);
-    let remainingTasks = totalTasks;
-
     // Extend the duration by a random sample average of lead times
     const leadTime = randomSampleAverage(ltSamples, Math.round(ltSamples.length * 0.1), Math.round(ltSamples.length * 0.9)) || 0;
     let durationInCalendarWeeks = Math.round(leadTime / 7);
+    
     let weekNumber = 0
     const simulatedTp = [];
     let effortWeeks = 0;
     let partialTp = 0;
-
-    // Run the simulation
     const burnDown = [];
+    let remainingTasks = totalTasks;
+    // Run the simulation
     while (remainingTasks > 0) {
         burnDown.push(remainingTasks);
         const randomTp = randomElement(tpSamples);
-        const contributorsThisWeek = weekNumber >= idealWeeks ? maxContributors : contributorsDistribution[Math.min(99, Math.round(100 * weekNumber / idealWeeks))];
+        const percentComplete = Math.max(0, Math.round((totalTasks - remainingTasks) / totalTasks * 100));
+        const contributorsThisWeek = contributorsDistribution[percentComplete];
         const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors)) + partialTp;
         const actualTp = Math.floor(adjustedTp);
         partialTp = (actualTp < adjustedTp) ? (adjustedTp - actualTp) : 0;
