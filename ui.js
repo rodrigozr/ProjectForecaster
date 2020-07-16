@@ -1,5 +1,5 @@
 $(function () {
-    $('[data-toggle="tooltip"]').tooltip({delay: 500});
+    $('[data-toggle="tooltip"]').tooltip({ delay: 500 });
 
     function parseSamples(selector) {
         let val = $(selector).val() || '';
@@ -37,6 +37,16 @@ $(function () {
         $row.find("input[name='highImpact']").val(risk.highImpact);
         $row.find("input[name='description']").val(risk.description);
     }
+    const $probabilitiesRowTemplate = $('#probabilities').find('.probabilities-row').clone();
+    function addProbabilityRow() {
+        const $row = $probabilitiesRowTemplate.clone();
+        $('#probabilities').find('tbody').append($row);
+        return $row;
+    }
+    function clearProbabilities() {
+        $('.probabilities-row').remove();
+    }
+
     function share() {
         if (readSimulationData()) {
             navigator.clipboard.writeText(location.href);
@@ -105,10 +115,28 @@ $(function () {
             $('#res-duration').val(duration);
             let endDate = '(No start date set)';
             if (simulationData.startDate) {
-                const oneWeek = 1000 * 60 * 60 * 24 * 7;
-                endDate = new Date(new Date(simulationData.startDate).getTime() + (duration * oneWeek)).toDateString();
+                endDate = moment(simulationData.startDate).add(duration, 'weeks').format("MMM Do YYYY");
             }
             $('#res-endDate').val(endDate);
+
+            // Probabilities
+            clearProbabilities();
+            for (const res of result.resultsTable) {
+                const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
+                const style = res.Likelihood > 80 ? 'almost-certain' : res.Likelihood > 45 ? 'somewhat-certain' : 'not-certain';
+                const $row = addProbabilityRow();
+                const $cells = $row.find('td');
+                $cells.addClass(style);
+                $cells.eq(0).text(res.Likelihood + '%');
+                $cells.eq(1).text(res.Effort.toString());
+                $cells.eq(2).text(res.Duration.toString());
+                $cells.eq(3).text(res.TotalTasks.toString());
+                if (simulationData.startDate) {
+                    $cells.eq(4).text(moment(simulationData.startDate).add(res.Duration, 'weeks').format("MMM Do YYYY"));
+                }
+                $cells.eq(5).text(comment);
+            }
+
             drawHistogram('res-duration-histogram', result.simulations.map(s => s.durationInCalendarWeeks), confidenceLevel);
             drawBurnDowns('res-burn-downs', result.burnDowns);
             drawScatterPlot('res-effort-scatter-plot', result.simulations.map(s => s.effortWeeks), confidenceLevel);
@@ -162,7 +190,7 @@ $(function () {
     if (location.hash && location.hash.trim().length > 1) {
         loadDataFromUrl();
     }
-    window.onhashchange = function() {
+    window.onhashchange = function () {
         if (currentlyLoadedHash != location.hash) {
             location.reload();
         }

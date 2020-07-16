@@ -5,7 +5,6 @@ function drawHistogram(id, durations, linePercentile = 85) {
         chartsCache[id].destroy();
         chartsCache[id] = null;
     }
-    const lineValue = Math.round(percentile(durations, linePercentile/100, true));
     const ctx = document.getElementById(id).getContext('2d');
     const histogram = {};
     for (const val of durations) {
@@ -14,6 +13,8 @@ function drawHistogram(id, durations, linePercentile = 85) {
     const keys = sortNumbers(Object.keys(histogram));
     const labels = keys.map(n => n.toString());
     const data = keys.map(key => histogram[key]);
+    const lineValue = Math.round(percentile(durations, linePercentile/100, true));
+    const lineIndex = labels.indexOf(lineValue.toString()) + 0.5;
 
     chartsCache[id] = new Chart(ctx, {
         type: 'bar',
@@ -61,7 +62,7 @@ function drawHistogram(id, durations, linePercentile = 85) {
                 annotations: [{
                     type: 'line',
                     mode: 'vertical',
-                    value: lineValue.toString(),
+                    value: lineIndex,
                     scaleID: 'x-axis-0',
                     borderColor: 'red',
                     borderWidth: 2,

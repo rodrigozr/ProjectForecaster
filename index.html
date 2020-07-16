@@ -24,6 +24,29 @@
             background-color: #f2f2f2;
             padding: 25px;
         }
+
+        @media (max-width: 992px) {
+            .probabilities-header {
+                font-size: 12px;
+            }
+        }
+        @media (max-width: 720px) {
+            .probabilities-header {
+                font-size: 10px;
+            }
+        }
+
+        .almost-certain {
+            background-color: rgba(75, 192, 192, 0.2);
+        }
+
+        .somewhat-certain {
+            background-color: rgba(255, 206, 86, 0.2);
+        }
+
+        .not-certain {
+            background-color: rgba(255, 99, 132, 0.2);
+        }
     </style>
 </head>
 
@@ -60,12 +83,6 @@
         <div class="container text-center">
             <h1>Project forecaster</h1>
             <p>Forecast probabilities of a project's effort and duration using Monte Carlo simulations.</p>
-            <p>Note: This tool can give accurate results regardless of your project management and development process.
-                However, you will get better results when your project tasks are broken down to be within reasonable
-                size differences. Differences of up to 500% in task sizes are perfectly fine, but please don't expect
-                highly-accurate results if some tasks take 15 minutes while others take 45 days (unless they are evenly
-                spread) ;)
-            </p>
         </div>
 
         <div class="container-fluid bg-6 text-center">
@@ -127,10 +144,10 @@
                             <span class="input-group-text" id="label-numberOfSimulations">Number of simulations<span
                                     style="color:red">*</span></span>
                         </div>
-                        <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="500000"
+                        <input type="number" min="10000" max="10000000" id="numberOfSimulations" value="100000"
                             data-toggle="tooltip" data-html="true" data-placement="left" class="form-control"
                             aria-describedby="label-numberOfSimulations" required="required"
-                            title="Number of simulations to execute.<br/><br/>Recommended minimum: 10K, Default: 500K, Max: 10MM" />
+                            title="Number of simulations to execute.<br/><br/>Recommended minimum: 10K, Default: 100K, Max: 10MM" />
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
@@ -160,9 +177,8 @@
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="label-startDate">Start date</span>
                         </div>
-                        <input type="date" id="startDate" data-toggle="tooltip"
-                            data-html="true" data-placement="left" class="form-control"
-                            aria-describedby="label-startDate"
+                        <input type="date" id="startDate" data-toggle="tooltip" data-html="true" data-placement="left"
+                            class="form-control" aria-describedby="label-startDate"
                             title="<u>Optional:</u> Planned start date for this project. Set this if you want to calculate a planned end date" />
                     </div>
                 </div>
@@ -262,7 +278,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="label-res-effort">Effort:</span>
                     </div>
-                    <input type="text" id="res-effort" class="form-control" aria-describedby="label-res-effort"/>
+                    <input type="text" id="res-effort" class="form-control" aria-describedby="label-res-effort" />
                     <div class="input-group-append">
                         <span class="input-group-text">person-weeks</span>
                     </div>
@@ -271,7 +287,7 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="label-res-duration">Duration:</span>
                     </div>
-                    <input type="text" id="res-duration" class="form-control" aria-describedby="label-res-duration"/>
+                    <input type="text" id="res-duration" class="form-control" aria-describedby="label-res-duration" />
                     <div class="input-group-append">
                         <span class="input-group-text">calendar weeks</span>
                     </div>
@@ -280,9 +296,36 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="label-res-endDate">Delivery date:</span>
                     </div>
-                    <input type="text" id="res-endDate" class="form-control" aria-describedby="label-res-endDate"/>
+                    <input type="text" id="res-endDate" class="form-control" aria-describedby="label-res-endDate" />
                 </div>
             </div>
+            <h3>All probabilities</h3>
+            <div class="row">
+                <table id="probabilities" class="table table-sm">
+                    <thead>
+                        <tr class="d-flex probabilities-header">
+                            <th scope="col" class="col-2">Likelihood</th>
+                            <th scope="col" class="col-1">Effort</th>
+                            <th scope="col" class="col-1">Duration</th>
+                            <th scope="col" class="col-2">Tasks</th>
+                            <th scope="col" class="col-3">Date</th>
+                            <th scope="col" class="col-3">Comment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="d-flex probabilities-row">
+                            <td class="col-2"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-2"></td>
+                            <td class="col-3"></td>
+                            <td class="col-3"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
             <h3>Charts</h3>
             <canvas id="res-duration-histogram"></canvas>
             <canvas id="res-burn-downs"></canvas>
@@ -314,5 +357,6 @@
 <script src="monte_carlo.js" async="async"></script>
 <script src="draw-charts.js" async="async"></script>
 <script src="chartjs-plugin-annotation.min.js" async="async"></script>
+<script src="moment.min.js" async="async"></script>
 
 </html>
