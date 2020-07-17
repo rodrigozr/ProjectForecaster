@@ -225,7 +225,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="d-flex">
+                        <tr id="risk-row-template" class="d-flex risk-row">
                             <td class="col-2">
                                 <div class="input-group mb-3">
                                     <input type="number" min="1" max="100" class="form-control"
@@ -255,6 +255,14 @@
                             </td>
                             <td class="col-6"><input type="text" class="form-control" name="description"></input></td>
                         </tr>
+                        <tr id="add-risk-row" class="d-flex">
+                            <td class="col-2"></td>
+                            <td class="col-2"></td>
+                            <td class="col-2"></td>
+                            <td class="col-6">
+                                <button id="addRisk" type="button" class="btn btn-secondary btn-sm">Add row</button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -262,9 +270,11 @@
 
         </div>
 
+        <!--
         <div class="container-fluid bg-12 text-right">
-            <button id="addRisk" type="button" class="btn btn-secondary">Add row</button>
+            <button id="addRisk" type="button" class="btn btn-secondary btn-sm">Add row</button>
         </div>
+        -->
         <div class="container-fluid bg-12 text-center">
             <button id="run" type="button" class="btn btn-primary">Run the simulation!</button>
             <button id="share" type="button" class="btn btn-secondary" title="Share!"
@@ -322,9 +332,20 @@
                             <td class="col-3"></td>
                             <td class="col-3"></td>
                         </tr>
+                        <tr id="show-more-row" class="d-flex">
+                            <td class="col-2"></td>
+                            <td class="col-1"></td>
+                            <td class="col-1"></td>
+                            <td class="col-2"></td>
+                            <td class="col-3"></td>
+                            <td class="col-3">
+                                <button type="button" id="show-more" class="btn btn-secondary btn-sm">Show
+                                    more...
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-
             </div>
 
             <h3>Charts</h3>

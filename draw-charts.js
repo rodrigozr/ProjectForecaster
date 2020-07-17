@@ -14,7 +14,7 @@ function drawHistogram(id, durations, linePercentile = 85) {
     const labels = keys.map(n => n.toString());
     const data = keys.map(key => histogram[key]);
     const lineValue = Math.round(percentile(durations, linePercentile/100, true));
-    const lineIndex = labels.indexOf(lineValue.toString()) + 0.5;
+    const lineIndex = labels.findIndex(val => lineValue < val) - 0.5;
 
     chartsCache[id] = new Chart(ctx, {
         type: 'bar',

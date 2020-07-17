@@ -8,7 +8,7 @@ $(function () {
     }
     function parseRisks(selector) {
         const risks = [];
-        $(selector).find('tbody').find('tr').each((_index, el) => {
+        $(selector).find('tbody').find('.risk-row').each((_index, el) => {
             const $el = $(el);
             const risk = {
                 likelihood: $el.find("input[name='likelihood']").val(),
@@ -25,10 +25,10 @@ $(function () {
         });
         return risks;
     }
-    const $riskRowTemplate = $('#risks').find('tbody').find('tr').clone();
+    const $riskRowTemplate = $('#risk-row-template').clone();
     function addRisk() {
         const $row = $riskRowTemplate.clone();
-        $('#risks').find('tbody').append($row);
+        $row.insertBefore($('#add-risk-row'));
         return $row;
     }
     function fillRisk(risk, $row) {
@@ -40,7 +40,7 @@ $(function () {
     const $probabilitiesRowTemplate = $('#probabilities').find('.probabilities-row').clone();
     function addProbabilityRow() {
         const $row = $probabilitiesRowTemplate.clone();
-        $('#probabilities').find('tbody').append($row);
+        $row.insertBefore('#show-more-row');
         return $row;
     }
     function clearProbabilities() {
@@ -121,7 +121,8 @@ $(function () {
 
             // Probabilities
             clearProbabilities();
-            for (const res of result.resultsTable) {
+            $('#show-more-row').show();
+            const addProbability = (res) => {
                 const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
                 const style = res.Likelihood > 80 ? 'almost-certain' : res.Likelihood > 45 ? 'somewhat-certain' : 'not-certain';
                 const $row = addProbabilityRow();
@@ -136,6 +137,12 @@ $(function () {
                 }
                 $cells.eq(5).text(comment);
             }
+            result.resultsTable.slice(0, 9).forEach(addProbability);
+            $('#show-more').off('click').on('click', () => {
+                result.resultsTable.slice(9).forEach(addProbability);
+                $('#show-more').off('click').hide();
+                $('#show-more-row').hide();
+            });
 
             drawHistogram('res-duration-histogram', result.simulations.map(s => s.durationInCalendarWeeks), confidenceLevel);
             drawBurnDowns('res-burn-downs', result.burnDowns);
@@ -177,7 +184,7 @@ $(function () {
                     $el.val(typeof (simulationData[name]) == 'Array' ? simulationData[name].join(',') : simulationData[name]);
                 }
             }
-            $('#risks').find('tbody').find('tr').remove();
+            $('#risks').find('.risk-row').remove();
             if (simulationData.risks && simulationData.risks.length > 0) {
                 for (const risk of simulationData.risks) {
                     fillRisk(risk, addRisk());
