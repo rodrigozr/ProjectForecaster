@@ -37,7 +37,7 @@ function sortNumbers(array) {
  * @returns random integer
  */
 function randomInteger(min, max) {
-    return Math.floor(Math.random() * (max - min)) + min;
+    return Math.floor(Math.random() * (max + 1 - min)) + min;
 }
 
 /**
@@ -123,7 +123,7 @@ function simulateBurnDown(simulationData) {
     const { tpSamples, ltSamples, splitRateSamples, risks, numberOfTasks, totalContributors, maxContributors, contributorsDistribution } = simulationData;
 
     // Retrieve a random split rate for this round
-    const randomSplitRate = randomSampleAverage(splitRateSamples, 1, splitRateSamples.length) || 1.0;
+    const randomSplitRate = randomSampleAverage(splitRateSamples, 1, splitRateSamples.length * 3) || 1.0;
 
     // Calculate random impacts for this round
     let impactTasks = 0;
