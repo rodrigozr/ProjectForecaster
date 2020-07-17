@@ -122,6 +122,7 @@ $(function () {
             // Probabilities
             clearProbabilities();
             $('#show-more-row').show();
+            $('#show-more').show();
             const addProbability = (res) => {
                 const comment = res.Likelihood > 80 ? 'Almost certain' : res.Likelihood > 45 ? 'Somewhat certain' : 'Less than coin-toss odds';
                 const style = res.Likelihood > 80 ? 'almost-certain' : res.Likelihood > 45 ? 'somewhat-certain' : 'not-certain';
