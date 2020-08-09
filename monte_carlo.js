@@ -141,22 +141,17 @@ function simulateBurnDown(simulationData) {
     let durationInCalendarWeeks = Math.round(leadTime / 7);
     
     let weekNumber = 0
-    const simulatedTp = [];
     let effortWeeks = 0;
-    let partialTp = 0;
     const burnDown = [];
     let remainingTasks = totalTasks;
     // Run the simulation
     while (remainingTasks > 0) {
-        burnDown.push(remainingTasks);
+        burnDown.push(Math.ceil(remainingTasks));
         const randomTp = randomElement(tpSamples);
         const percentComplete = Math.max(0, Math.min(99, Math.round((totalTasks - remainingTasks) / totalTasks * 100)));
         const contributorsThisWeek = contributorsDistribution[percentComplete];
-        const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors)) + partialTp;
-        const actualTp = Math.round(adjustedTp);
-        partialTp = (actualTp < adjustedTp) ? (adjustedTp - actualTp) : 0;
-        simulatedTp.push(actualTp);
-        remainingTasks -= actualTp;
+        const adjustedTp = (randomTp * (contributorsThisWeek / totalContributors));
+        remainingTasks -= adjustedTp;
         durationInCalendarWeeks++;
         weekNumber++;
         effortWeeks += contributorsThisWeek;
@@ -165,7 +160,6 @@ function simulateBurnDown(simulationData) {
     return {
         totalTasks,
         durationInCalendarWeeks,
-        simulatedTp,
         leadTime,
         effortWeeks,
         burnDown,
