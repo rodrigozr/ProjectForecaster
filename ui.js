@@ -16,7 +16,9 @@ $(function () {
                 highImpact: $el.find("input[name='highImpact']").val(),
                 description: $el.find("input[name='description']").val(),
             };
-            if (risk.likelihood && risk.lowImpact && risk.highImpact) {
+            if (risk.likelihood && (risk.lowImpact || risk.highImpact)) {
+                if (!risk.lowImpact) risk.lowImpact = '1';
+                else if (!risk.highImpact) risk.highImpact = risk.lowImpact;
                 risk.likelihood = parseInt(risk.likelihood) || 0;
                 risk.lowImpact = parseInt(risk.lowImpact) || 0;
                 risk.highImpact = parseInt(risk.highImpact) || 0;
@@ -51,7 +53,7 @@ $(function () {
         if (readSimulationData()) {
             navigator.clipboard.writeText(location.href);
             $('#share').popover('show');
-            setTimeout(() => $('#share').popover('dispose'), 2000);
+            setTimeout(() => $('#share').popover('dispose'), 5000);
         }
     }
     let currentlyLoadedHash = null;
