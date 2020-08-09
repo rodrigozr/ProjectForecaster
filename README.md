@@ -3,4 +3,8 @@ Forecast probabilities of a project's effort and duration using Monte Carlo simu
 
 Public-facing URL: https://rodrigozr.github.io/ProjectForecaster/
 
-Documentation is still pending - please check back later!
+Documentation and user-manual: https://github.com/rodrigozr/ProjectForecaster/wiki
+
+# Screen shots
+![summary](https://github.com/rodrigozr/ProjectForecaster/wiki/summary.png)
+![charts](https://github.com/rodrigozr/ProjectForecaster/wiki/charts.png)
