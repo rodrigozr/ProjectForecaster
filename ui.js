@@ -88,9 +88,7 @@ $(function () {
         location.hash = hash;
         return simulationData;
     }
-    $('#addRisk').on('click', addRisk);
-    $('#share').on('click', share);
-    $('#run').on('click', function () {
+    function runSimulation() {
         const simulationData = readSimulationData();
         if (!simulationData) return;
         loadDataFromUrl();
@@ -176,7 +174,7 @@ $(function () {
             write(`   and ALSO if the process changes over time and you use too much data.)\n`);
         }, 100);
 
-    });
+    }
     function loadDataFromUrl() {
         try {
             currentlyLoadedHash = location.hash;
@@ -193,17 +191,25 @@ $(function () {
                     fillRisk(risk, addRisk());
                 }
             }
+            return true;
         } catch (error) {
             console.error(error);
+            return false;
         }
     }
     if (location.hash && location.hash.trim().length > 1) {
-        loadDataFromUrl();
+        if (loadDataFromUrl()) {
+            runSimulation();
+        }
     }
     window.onhashchange = function () {
         if (currentlyLoadedHash != location.hash) {
             location.reload();
         }
     }
+
+    $('#addRisk').on('click', addRisk);
+    $('#share').on('click', share);
+    $('#run').on('click', runSimulation);
 
 });
