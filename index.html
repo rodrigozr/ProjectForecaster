@@ -140,7 +140,7 @@
                         <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
                             data-html="true" data-placement="right" class="form-control"
                             aria-describedby="label-numberOfTasks" required="required"
-                            title="Number of tasks estimated for this project.<br/><br/>Notice that tasks should be within a reasonable range of size (up to 500% difference in sizes is perfectly fine). It doesn't matter how you are breaking down your projects, as long as tasks sizes are within this range. This could be user stories, or any other granular level that makes sense to you." />
+                            title="Number of tasks planned for this project.<br/><br/>Notice that tasks should be within a reasonable range of size (up to 500% difference in sizes is perfectly fine). It doesn't matter how you are breaking down your projects, as long as tasks sizes are within this range. This could be user stories, or any other granular level that makes sense to you." />
                     </div>
                 </div>
                 <div class="col-sm-6 text-left">
@@ -289,7 +289,7 @@
         <div id="results-main" class="container-fluid bg-12 text-center" style="display:none">
             <h1>Simulation results</h1>
             <div class="col-sm-4 text-left">
-                <h3>Forecast summary:</h3>
+                <h4 id="res-summary-header">Project forecast summary:</h4>
                 <div class="input-group mb-1">
                     <div class="input-group-prepend">
                         <span class="input-group-text font-weight-bold" id="label-res-effort">Effort:</span>

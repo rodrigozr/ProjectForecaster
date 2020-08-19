@@ -111,6 +111,7 @@ $(function () {
             const reportPercentile = confidenceLevel / 100;
             const effort = Math.round(percentile(result.simulations.map(s => s.effortWeeks), reportPercentile, true));
             const duration = Math.round(percentile(result.simulations.map(s => s.durationInCalendarWeeks), reportPercentile, true));
+            $('#res-summary-header').text(`Project forecast summary (with ${confidenceLevel}% of confidence):`);
             $('#res-effort').val(effort);
             $('#res-duration').val(duration);
             let endDate = '(No start date set)';
