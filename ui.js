@@ -1,4 +1,4 @@
-$(function () {
+$(window).on("load", function () {
     $('[data-toggle="tooltip"]').tooltip({ delay: 500 });
 
     function parseSamples(selector) {
