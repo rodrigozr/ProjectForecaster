@@ -67,9 +67,9 @@ $(window).on("load", function () {
             splitRateSamples: parseSamples('#splitRateSamples'),
             risks: parseRisks('#risks'),
             numberOfTasks: parseInt($('#numberOfTasks').val()),
-            totalContributors: parseInt($('#totalContributors').val()),
-            minContributors: parseInt($('#minContributors').val()),
-            maxContributors: parseInt($('#maxContributors').val()),
+            totalContributors: Number(Number($('#totalContributors').val()).toFixed(1)),
+            minContributors: Number(Number($('#minContributors').val()).toFixed(1)),
+            maxContributors: Number(Number($('#maxContributors').val()).toFixed(1)),
             sCurveSize: parseInt($('#sCurveSize').val()),
             startDate: $('#startDate').val() || undefined
         };

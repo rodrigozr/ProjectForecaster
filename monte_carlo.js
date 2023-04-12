@@ -97,7 +97,9 @@ function calculateContributorsDistribution(simulationData) {
     const curveSize = Math.max(0, Math.min(50, sCurveSize));
     const curveTailStart = 100 - curveSize;
     const contributorsRange = [];
-    for (let i = minContributors; i < maxContributors; i++) {
+    // The range is in 0.1 granularity to enable cases such as "5.5" max contributors for cases where someone is ramping up, for example
+    // We don't need a higher granularity than this for any practical scenario
+    for (let i = minContributors; i <= maxContributors; i += 0.1) {
         contributorsRange.push(i);
     }
     const contributorsDistribution = [];
