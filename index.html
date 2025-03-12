@@ -134,7 +134,7 @@
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="label-numberOfTasks">Number of tasks<span
+                            <span class="input-group-text" id="label-numberOfTasks">Planned number of tasks<span
                                     style="color:red">*</span></span>
                         </div>
                         <input type="number" min="0" max="9999" id="numberOfTasks" value="1" data-toggle="tooltip"
@@ -206,7 +206,7 @@
                              aria-labelledby="projectTrackingHeader" data-parent="#projectTrackingAccordion">
                             <div class="card-body">
                                 <p><i>To forecast the remaining work of an in-progress project, fill the start date and all the fields below:</i></p>
-                                <div class="row justify-content-center">
+                                <div class="row justify-content-between">
                                     <div class="col-sm-6">
                                         <div class="input-group mb-3">
                                             <div class="input-group-prepend">
@@ -233,7 +233,26 @@
                                                    aria-describedby="label-remainingTasks"/>
                                         </div>
                                     </div>
-                                </div>
+                                    <div class="col-sm-6">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="label-actualTasks">Actual number of tasks</span>
+                                            </div>
+                                            <input type="number" id="actualTasks" class="form-control" 
+                                                   title="Sum of completed and remaining tasks" data-toggle="tooltip"
+                                                   aria-describedby="label-actualTasks" readonly/>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="label-actualSplitRate">Actual split rate</span>
+                                            </div>
+                                            <input type="number" id="actualSplitRate" class="form-control" 
+                                                   title="Actual number of tasks divided by the originally planned number of tasks" 
+                                                   data-toggle="tooltip"
+                                                   aria-describedby="label-actualSplitRate" readonly/>
+                                        </div>
+                                    </div>
+                                </div>                                
                             </div>
                         </div>
                     </div>

@@ -1,6 +1,35 @@
 $(window).on("load", function () {
     $('[data-toggle="tooltip"]').tooltip({ delay: 500 });
 
+    // Function to update the calculated fields
+    function updateCalculatedFields() {
+        // Get values, defaulting to 0 if empty or negative
+        const completedTasks = Math.max(0, parseInt($('#completedTasks').val()) || 0);
+        const remainingTasks = Math.max(0, parseInt($('#remainingTasks').val()) || 0);
+        const plannedTasks = Math.max(0, parseInt($('#numberOfTasks').val()) || 0);
+
+        const actualTasks = completedTasks + remainingTasks;
+ 
+        if (plannedTasks && actualTasks) {
+            // Set actual tasks
+            $('#actualTasks').val(actualTasks);
+
+            // Calculate and set split rate
+            const splitRate = actualTasks / plannedTasks;
+            $('#actualSplitRate').val(splitRate.toFixed(2))
+                     .css('color', 
+                         splitRate > 1 ? '#dc3545' : // red for over planned
+                         splitRate === 1 ? '' :      // black for exactly as planned
+                         '#198754');                 // green for under planned
+        } else {
+            $('#actualSplitRate').val('').css('color', '');
+            $('#actualTasks').val('');
+        }
+    }
+
+    // Add event listeners and trigger initial calculation
+    $('#completedTasks, #remainingTasks, #numberOfTasks').on('input', updateCalculatedFields);
+
     function parseSamples(selector) {
         let val = $(selector).val() || '';
         if (val.trim().length === 0) return [];
@@ -214,6 +243,7 @@ $(window).on("load", function () {
             }
             const inProgressTracking = $('#startDate').val() && $('#currentDate').val() && $('#remainingTasks').val();
             $('#projectTrackingCollapse').collapse(inProgressTracking ? 'show' : 'hide');
+            updateCalculatedFields();
             return true;
         } catch (error) {
             console.error(error);
