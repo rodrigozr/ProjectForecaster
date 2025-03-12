@@ -71,7 +71,11 @@ $(window).on("load", function () {
             minContributors: Number(Number($('#minContributors').val()).toFixed(1)),
             maxContributors: Number(Number($('#maxContributors').val()).toFixed(1)),
             sCurveSize: parseInt($('#sCurveSize').val()),
-            startDate: $('#startDate').val() || undefined
+            startDate: $('#startDate').val() || undefined,
+            // In-progress project tracking fields
+            currentDate: $('#currentDate').val() || undefined,
+            completedTasks: $('#completedTasks').val() ? parseInt($('#completedTasks').val()) : undefined,
+            remainingTasks: $('#remainingTasks').val() ? parseInt($('#remainingTasks').val()) : undefined,
         };
         if (!simulationData.tpSamples.some(n => n >= 1)) {
             alert("Must have at least one weekly throughput sample greater than zero");
@@ -88,6 +92,19 @@ $(window).on("load", function () {
         location.hash = hash;
         return simulationData;
     }
+    function updateSimulationForInProgress(simulationData) {
+        if (simulationData.startDate && simulationData.currentDate && simulationData.remainingTasks) {
+            // Adjust parameters for in-progress (remaining work) forecasting
+            simulationData.numberOfTasks = simulationData.remainingTasks;
+            simulationData.startDate = simulationData.currentDate;
+            if (simulationData.completedTasks > 0) {
+                simulationData.ltSamples = [];
+                if (simulationData.sCurveSize && simulationData.completedTasks > (simulationData.numberOfTasks * (simulationData.sCurveSize / 100))) {
+                    simulationData.sCurveSize = Math.round(simulationData.sCurveSize / 2);
+                }
+            }
+        }
+    }
     function runSimulation() {
         const simulationData = readSimulationData();
         if (!simulationData) return;
@@ -98,6 +115,8 @@ $(window).on("load", function () {
         $results.val('');
         const write = str => $results.val($results.val() + str);
         $('#res-effort').val('Running...');
+
+        updateSimulationForInProgress(simulationData);
 
         setTimeout(() => {
             // Run the simulation
@@ -180,6 +199,7 @@ $(window).on("load", function () {
         try {
             currentlyLoadedHash = location.hash;
             const simulationData = JSON.parse(atob(location.hash.trim().substring(1)));
+            $('input').val('');
             for (const name of Object.getOwnPropertyNames(simulationData)) {
                 const $el = $('#' + name);
                 if ($el.is('input,textarea')) {
@@ -192,6 +212,8 @@ $(window).on("load", function () {
                     fillRisk(risk, addRisk());
                 }
             }
+            const inProgressTracking = $('#startDate').val() && $('#currentDate').val() && $('#remainingTasks').val();
+            $('#projectTrackingCollapse').collapse(inProgressTracking ? 'show' : 'hide');
             return true;
         } catch (error) {
             console.error(error);

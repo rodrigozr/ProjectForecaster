@@ -190,6 +190,55 @@
                 </div>
             </div>
             <p><i>(Fields marked with a red <span style="color:red">*</span> are mandatory)</i></p>
+            <div class="container-fluid bg-12 text-center">
+                <div class="accordion" id="projectTrackingAccordion">
+                    <div class="card">
+                        <div class="card-header" id="projectTrackingHeader">
+                            <h2 class="mb-0">
+                                <button class="btn btn-link btn-block text-left collapsed" type="button" 
+                                        data-toggle="collapse" data-target="#projectTrackingCollapse" 
+                                        aria-expanded="false" aria-controls="projectTrackingCollapse">
+                                    In-progress project tracking
+                                </button>
+                            </h2>
+                        </div>
+                        <div id="projectTrackingCollapse" class="collapse" 
+                             aria-labelledby="projectTrackingHeader" data-parent="#projectTrackingAccordion">
+                            <div class="card-body">
+                                <p><i>To forecast the remaining work of an in-progress project, fill the start date and all the fields below:</i></p>
+                                <div class="row justify-content-center">
+                                    <div class="col-sm-6">
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="label-currentDate">Current date</span>
+                                            </div>
+                                            <input type="date" id="currentDate" class="form-control" 
+                                                   aria-describedby="label-currentDate" data-toggle="tooltip"
+                                                   title="Current date for the forecasting of remaining work. (Don't forget to set the Start Date as well)"/>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="label-completedTasks">Completed tasks</span>
+                                            </div>
+                                            <input type="number" min="0" id="completedTasks" class="form-control"
+                                                   title="Number of tasks completed so far" data-toggle="tooltip"
+                                                   aria-describedby="label-completedTasks"/>
+                                        </div>
+                                        <div class="input-group mb-3">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" id="label-remainingTasks">Tasks remaining</span>
+                                            </div>
+                                            <input type="number" min="0" id="remainingTasks" class="form-control" 
+                                                   title="Number of tasks still remaining" data-toggle="tooltip"
+                                                   aria-describedby="label-remainingTasks"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="container-fluid bg-12 text-center">
@@ -374,7 +423,7 @@
                         href="https://github.com/FocusedObjective/FocusedObjective.Resources/blob/master/Spreadsheets/Throughput%20Forecaster.xlsx">Throughput
                         Forecaster</a> and Dimitar Bakardzhiev's <a href="https://www.infoq.com/articles/noestimates-monte-carlo/">study</a>)
                 </i>.<br />
-                Version: 1.4
+                Version: 1.5
             </small>
         </span>
     </footer>
