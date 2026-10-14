@@ -1,16 +1,27 @@
 {
   "name": "project-forecaster",
-  "version": "1.0.0",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
   "description": "Forecast probabilities of a project's effort and duration using Monte Carlo simulations",
+  "engines": {
+    "node": ">=24"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npm install && npm run copy-all && npm run webapp",
-    "copy-all": "npm run copy-chart && npm run copy-jquery && npm run copy-bootstrap && npm run copy-moment",
-    "copy-chart": "cp node_modules/chart.js/dist/Chart.bundle.min.js node_modules/chart.js/dist/Chart.min.css node_modules/chartjs-plugin-annotation/chartjs-plugin-annotation.min.js ./",
-    "copy-jquery": "cp node_modules/jquery/dist/jquery.min.js ./",
-    "copy-bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/bootstrap/dist/js/bootstrap.bundle.min.js ./",
-    "copy-moment": "cp node_modules/moment/min/moment.min.js ./",
-    "webapp": "rm -rf webapp; mkdir webapp && cp *.html *.css *.js *.png webapp/"
+    "predev": "node scripts/check-node.mjs",
+    "dev": "vite",
+    "prebuild": "node scripts/check-node.mjs",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "prepreview": "node scripts/check-node.mjs",
+    "preview": "vite preview",
+    "pretypecheck": "node scripts/check-node.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "pretest": "node scripts/check-node.mjs",
+    "test": "vitest run",
+    "precoverage": "node scripts/check-node.mjs",
+    "coverage": "vitest run --coverage",
+    "preclean": "node scripts/check-node.mjs",
+    "clean": "node scripts/clean.mjs"
   },
   "author": "Rodrigo Rosauro",
   "license": "MIT",
@@ -19,10 +30,26 @@
     "url": "git+https://github.com/rodrigozr/ProjectForecaster.git"
   },
   "dependencies": {
-    "bootstrap": "^4.5.0",
-    "chart.js": "^2.9.3",
-    "chartjs-plugin-annotation": "^0.5.7",
-    "jquery": "^3.5.1",
-    "moment": "^2.27.0"
+    "@cloudscape-design/components": "^3.0.1400",
+    "@cloudscape-design/global-styles": "^1.0.71",
+    "chart.js": "^4.5.1",
+    "chartjs-plugin-annotation": "^3.1.0",
+    "react": "^19.3.0",
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.8",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "@vitest/coverage-v8": "^5.0.4",
+    "jsdom": "^30.1.2",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
   }
 }
