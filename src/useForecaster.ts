@@ -3,14 +3,19 @@ import { burnDownsChart, effortScatterChart, histogramChart, type ChartConfig } 
 import { runMonteCarloSimulation } from './lib/monteCarlo';
 import {
   applyInProgress,
+  decodeFile,
   decodeHash,
   defaultFormState,
   emptyRiskRow,
+  encodeFile,
   encodeHash,
+  exportFileName,
+  FILE_MIME_TYPE,
   formFromData,
   isInProgress,
   readForm,
   type FormState,
+  type LoadedData,
   type ProjectData,
   type RiskRow,
 } from './lib/projectData';
@@ -163,6 +168,46 @@ export function useForecaster(win: Window = window) {
     }
   }, [form, save, win, later]);
 
+  /**
+   * Validates the form, stores it in the URL hash (like sharing) and downloads the same data as a
+   * `<Project Name>.fcast.json` file. Everything happens in the browser.
+   */
+  const exportFile = useCallback(() => {
+    const data = save(form);
+    if (!data) return;
+    const url = URL.createObjectURL(new Blob([encodeFile(data)], { type: FILE_MIME_TYPE }));
+    const link = win.document.createElement('a');
+    link.href = url;
+    link.download = exportFileName(data.projectName);
+    win.document.body.appendChild(link);
+    link.click();
+    link.remove();
+    // Revoked on the next tick so the browser has started the download.
+    later(() => URL.revokeObjectURL(url), 0);
+  }, [form, save, win, later]);
+
+  /** Loads the form from an exported `.fcast.json` file and runs it, like opening a shared link. */
+  const importFile = useCallback(
+    async (file: File) => {
+      let data: LoadedData | null;
+      try {
+        data = decodeFile(await file.text());
+      } catch {
+        data = null;
+      }
+      if (!data) {
+        setError(`"${file.name}" is not a valid Project Forecaster file.`);
+        return;
+      }
+      setOutput(null);
+      setError(null);
+      const loaded = formFromData(data);
+      showForm(loaded);
+      run(loaded);
+    },
+    [showForm, run],
+  );
+
   return {
     form,
     setField,
@@ -177,6 +222,8 @@ export function useForecaster(win: Window = window) {
     shared,
     run: () => run(form),
     share,
+    exportFile,
+    importFile,
   };
 }
 

@@ -2,6 +2,7 @@ import Alert from '@cloudscape-design/components/alert';
 import Box from '@cloudscape-design/components/box';
 import Button from '@cloudscape-design/components/button';
 import ContentLayout from '@cloudscape-design/components/content-layout';
+import FileInput from '@cloudscape-design/components/file-input';
 import Header from '@cloudscape-design/components/header';
 import Link from '@cloudscape-design/components/link';
 import SpaceBetween from '@cloudscape-design/components/space-between';
@@ -11,7 +12,7 @@ import { ProjectForm } from './components/ProjectForm';
 import { Results } from './components/Results';
 import { useForecaster } from './useForecaster';
 
-export const VERSION = '2.0';
+export const VERSION = '2.1';
 const REPO = 'https://github.com/rodrigozr/ProjectForecaster';
 const WIKI = `${REPO}/wiki`;
 
@@ -79,6 +80,20 @@ export function App() {
                   Run the simulation!
                 </Button>
                 <Button onClick={() => void f.share()}>Share simulation</Button>
+                <Button iconName="download" onClick={f.exportFile}>
+                  Export to file
+                </Button>
+                <FileInput
+                  accept=".json,application/json"
+                  // A new empty array on every render clears the native input, so the same file can be imported again.
+                  value={[]}
+                  onChange={({ detail }) => {
+                    const [file] = detail.value;
+                    if (file) void f.importFile(file);
+                  }}
+                >
+                  Import from file
+                </FileInput>
               </SpaceBetween>
             </Box>
             {(f.running || f.output) && <Results running={f.running} output={f.output} />}

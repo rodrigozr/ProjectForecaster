@@ -2,10 +2,13 @@ import { describe, expect, it } from 'vitest';
 import {
   applyInProgress,
   calculateFields,
+  decodeFile,
   decodeHash,
   defaultFormState,
   emptyRiskRow,
+  encodeFile,
   encodeHash,
+  exportFileName,
   formFromData,
   isInProgress,
   parseRisks,
@@ -274,6 +277,102 @@ describe('projectData', () => {
       expect(decodeHash(legacyEncode(null))).toBeNull();
       expect(decodeHash(legacyEncode([1]))).toBeNull();
       expect(decodeHash('#' + btoa('{broken'))).toBeNull();
+    });
+  });
+
+  describe('exportFileName', () => {
+    it('names the file after the project', () => {
+      expect(exportFileName('My Project')).toBe('My Project.fcast.json');
+      expect(exportFileName('Projeto 🚀 日本')).toBe('Projeto 🚀 日本.fcast.json');
+    });
+
+    it('replaces characters that are not allowed in file names', () => {
+      expect(exportFileName('a/b\\c:d*e?f"g<h>i|j')).toBe('a_b_c_d_e_f_g_h_i_j.fcast.json');
+      expect(exportFileName('tab\there\u007f')).toBe('tab_here_.fcast.json');
+    });
+
+    it('removes leading and trailing spaces and dots', () => {
+      expect(exportFileName('  .Q3 plan.  ')).toBe('Q3 plan.fcast.json');
+    });
+
+    it('uses a default name when the project has no usable name', () => {
+      expect(exportFileName('')).toBe('Project.fcast.json');
+      expect(exportFileName('   ')).toBe('Project.fcast.json');
+      expect(exportFileName('...')).toBe('Project.fcast.json');
+    });
+  });
+
+  describe('encodeFile / decodeFile', () => {
+    const data = (): ProjectData => {
+      const result = readForm(validForm({ projectName: 'Projeto 🚀', startDate: '2026-01-05' }));
+      if (!result.ok) throw new Error(result.error);
+      return result.data;
+    };
+
+    it('exports the same data as the URL share', () => {
+      expect(JSON.parse(encodeFile(data()))).toEqual(decodeHash(encodeHash(data())));
+      expect(JSON.parse(encodeFile(sample()))).toEqual(sample());
+    });
+
+    const sample = (): ProjectData => ({
+      // Text that looks like an array (even across real line breaks) must be left as is
+      projectName: 'Has [1,2] and [\n  3\n] in text',
+      numberOfSimulations: 100000,
+      confidenceLevel: 85,
+      tpSamples: [8, 5, 4],
+      ltSamples: [13.1, -0.5, 1e-7, 2e21],
+      splitRateSamples: [],
+      risks: [{ likelihood: 50, lowImpact: 12, highImpact: 15, description: 'Pentest' }],
+      numberOfTasks: 38,
+      totalContributors: 10,
+      minContributors: 1,
+      maxContributors: 5,
+      sCurveSize: 20,
+    });
+
+    it('pretty-prints the file with each array of numbers on a single line', () => {
+      expect(encodeFile(sample())).toBe(
+        [
+          '{',
+          '  "projectName": "Has [1,2] and [\\n  3\\n] in text",',
+          '  "numberOfSimulations": 100000,',
+          '  "confidenceLevel": 85,',
+          '  "tpSamples": [8, 5, 4],',
+          '  "ltSamples": [13.1, -0.5, 1e-7, 2e+21],',
+          '  "splitRateSamples": [],',
+          '  "risks": [',
+          '    {',
+          '      "likelihood": 50,',
+          '      "lowImpact": 12,',
+          '      "highImpact": 15,',
+          '      "description": "Pentest"',
+          '    }',
+          '  ],',
+          '  "numberOfTasks": 38,',
+          '  "totalContributors": 10,',
+          '  "minContributors": 1,',
+          '  "maxContributors": 5,',
+          '  "sCurveSize": 20',
+          '}',
+          '',
+        ].join('\n'),
+      );
+    });
+
+    it('round-trips exported files', () => {
+      expect(decodeFile(encodeFile(data()))).toEqual(JSON.parse(JSON.stringify(data())));
+    });
+
+    it('ignores a byte order mark', () => {
+      expect(decodeFile('\uFEFF{"projectName":"x"}')).toEqual({ projectName: 'x' });
+    });
+
+    it('returns null for files that are not a JSON object', () => {
+      expect(decodeFile('')).toBeNull();
+      expect(decodeFile('{broken')).toBeNull();
+      expect(decodeFile('"just a string"')).toBeNull();
+      expect(decodeFile('null')).toBeNull();
+      expect(decodeFile('[1]')).toBeNull();
     });
   });
 });

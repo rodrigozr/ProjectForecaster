@@ -21,7 +21,7 @@ npm run clean      # delete build/test output (dist/, coverage/, caches)
 
 Project layout:
 * `src/lib/monteCarlo.ts` - standalone Monte Carlo engine (no dependencies, can be copied into other projects)
-* `src/lib/projectData.ts` - form/data conversion and the shareable URL format (`#` + base64 JSON, compatible with all previous versions)
+* `src/lib/projectData.ts` - form/data conversion, the shareable URL format (`#` + base64 JSON, compatible with all previous versions) and the project file format (`<Project Name>.fcast.json`, the same JSON as the URL, exported and imported entirely in the browser)
 * `src/lib/report.ts`, `src/lib/charts.ts` - results formatting and chart configuration
 * `src/components`, `src/App.tsx`, `src/useForecaster.ts` - React + Cloudscape UI
 * `test/` - Vitest unit tests

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App, VERSION } from '../src/App';
-import { encodeHash, readForm, defaultFormState } from '../src/lib/projectData';
+import { decodeHash, encodeFile, encodeHash, readForm, defaultFormState } from '../src/lib/projectData';
 import { README_SAMPLE_HASH } from './helpers/fixtures';
 
 vi.mock('react-chartjs-2', () => {
@@ -221,6 +221,115 @@ describe('App', () => {
       await act(async () => click('Share simulation'));
       expect(writeText).not.toHaveBeenCalled();
       expect(screen.getByText(/weekly throughput sample/)).toBeInTheDocument();
+    });
+  });
+
+  describe('exporting and importing files', () => {
+    const original = { createObjectURL: URL.createObjectURL, revokeObjectURL: URL.revokeObjectURL };
+    let createObjectURL: ReturnType<typeof vi.fn<(blob: Blob) => string>>;
+    let revokeObjectURL: ReturnType<typeof vi.fn<(url: string) => void>>;
+    let downloads: HTMLAnchorElement[];
+
+    const fileInput = () => document.querySelector('input[type="file"]') as HTMLInputElement;
+    const choose = (...files: File[]) => act(async () => fireEvent.change(fileInput(), { target: { files } }));
+    const exportedText = () => createObjectURL.mock.calls[0][0].text();
+
+    beforeEach(() => {
+      createObjectURL = vi.fn(() => 'blob:project');
+      revokeObjectURL = vi.fn();
+      Object.assign(URL, { createObjectURL, revokeObjectURL });
+      downloads = [];
+      vi.spyOn(HTMLAnchorElement.prototype, 'click').mockImplementation(function (this: HTMLAnchorElement) {
+        downloads.push(this);
+      });
+    });
+
+    afterEach(() => {
+      Object.assign(URL, original);
+      vi.restoreAllMocks();
+    });
+
+    it('downloads the same data as the share link as "<Project Name>.fcast.json"', async () => {
+      render(<App />);
+      fillMinimum();
+      change('Project name', 'Q3 plan');
+      click('Export to file');
+      expect(downloads).toHaveLength(1);
+      expect(downloads[0].download).toBe('Q3 plan.fcast.json');
+      expect(downloads[0].href).toBe('blob:project');
+      expect(downloads[0].isConnected).toBe(false);
+      expect(createObjectURL.mock.calls[0][0].type).toBe('application/json');
+      expect(window.location.hash).toBe(sampleHash({ projectName: 'Q3 plan', tpSamples: '3 4 5 6', numberOfSimulations: '300' }));
+      expect(JSON.parse(await exportedText())).toEqual(decodeHash(window.location.hash));
+      expect(revokeObjectURL).not.toHaveBeenCalled();
+      act(() => vi.advanceTimersByTime(0));
+      expect(revokeObjectURL).toHaveBeenCalledWith('blob:project');
+    });
+
+    it('does not export invalid data', () => {
+      render(<App />);
+      click('Export to file');
+      expect(downloads).toHaveLength(0);
+      expect(createObjectURL).not.toHaveBeenCalled();
+      expect(screen.getByText(/weekly throughput sample/)).toBeInTheDocument();
+    });
+
+    it('loads and runs an imported file, like opening a shared link', async () => {
+      const result = readForm({ ...defaultFormState(), projectName: 'Imported', tpSamples: '2 3', numberOfSimulations: '200' });
+      if (!result.ok) throw new Error(result.error);
+      render(<App />);
+      await choose(new File([encodeFile(result.data)], 'Imported.fcast.json', { type: 'application/json' }));
+      expect(input('Project name').value).toBe('Imported');
+      expect(input('Weekly throughput').value).toBe('2,3');
+      expect(window.location.hash).toBe(encodeHash(result.data));
+      flush();
+      expect(screen.getByText('Simulation results')).toBeInTheDocument();
+    });
+
+    it('restores an exported project', async () => {
+      const first = render(<App />);
+      fillMinimum();
+      change('Project name', 'Round trip');
+      change('Risk 1 likelihood', '50');
+      change('Risk 1 low impact', '2');
+      change('Risk 1 description', 'Vendor delay');
+      click('Export to file');
+      const exportedHash = window.location.hash;
+      const text = await exportedText();
+      first.unmount();
+      window.location.hash = '';
+
+      render(<App />);
+      expect(input('Project name').value).toBe('');
+      await choose(new File([text], 'Round trip.fcast.json'));
+      expect(input('Project name').value).toBe('Round trip');
+      expect(input('Weekly throughput').value).toBe('3,4,5,6');
+      expect(input('Risk 1 description').value).toBe('Vendor delay');
+      expect(window.location.hash).toBe(exportedHash);
+    });
+
+    it('shows an error for files that are not project files', async () => {
+      render(<App />);
+      change('Project name', 'Unchanged');
+      await choose(new File(['not json'], 'notes.txt'));
+      expect(screen.getByText('"notes.txt" is not a valid Project Forecaster file.')).toBeInTheDocument();
+      expect(input('Project name').value).toBe('Unchanged');
+    });
+
+    it('shows an error when the file cannot be read', async () => {
+      const file = new File(['{}'], 'locked.fcast.json');
+      vi.spyOn(file, 'text').mockRejectedValue(new Error('NotReadableError'));
+      render(<App />);
+      await choose(file);
+      expect(screen.getByText('"locked.fcast.json" is not a valid Project Forecaster file.')).toBeInTheDocument();
+    });
+
+    it('ignores an empty selection', async () => {
+      render(<App />);
+      change('Project name', 'Unchanged');
+      await choose();
+      expect(input('Project name').value).toBe('Unchanged');
+      expect(screen.queryByText(/not a valid Project Forecaster file/)).not.toBeInTheDocument();
     });
   });
 

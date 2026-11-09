@@ -1,8 +1,9 @@
 /**
- * Conversion between the editable form state, the simulation data model and the
- * shareable URL hash. Framework-agnostic (no React / DOM dependencies besides atob/btoa).
+ * Conversion between the editable form state, the simulation data model, the
+ * shareable URL hash and exported project files. Framework-agnostic (no React / DOM dependencies besides atob/btoa).
  *
  * URL format (unchanged since v1): `#` + base64(JSON.stringify(ProjectData)).
+ * File format: `<Project Name>.fcast.json` containing the same ProjectData JSON, pretty-printed.
  */
 import type { Risk, SimulationInput } from './monteCarlo';
 
@@ -263,12 +264,26 @@ export function encodeHash(data: ProjectData): string {
   return '#' + btoa(binary);
 }
 
+/** Project data as loaded from a URL hash or a file: possibly partial, old-format or hand-edited. */
+export type LoadedData = Partial<Record<keyof ProjectData, unknown>>;
+
+/** Parses project data JSON. @returns the parsed object, or null when the JSON is invalid or not an object */
+function parseProjectJson(json: string): LoadedData | null {
+  try {
+    const parsed: unknown = JSON.parse(json);
+    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
+    return parsed as LoadedData;
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Decodes a URL hash produced by any version of Project Forecaster.
  * Accepts UTF-8 and legacy Latin-1 payloads, missing padding, URL-escaped and URL-safe base64.
  * @returns the decoded object, or null when the hash is empty or invalid
  */
-export function decodeHash(hash: string): Partial<Record<keyof ProjectData, unknown>> | null {
+export function decodeHash(hash: string): LoadedData | null {
   let payload = hash.trim().replace(/^#/, '');
   if (payload.length === 0) return null;
   try {
@@ -281,10 +296,53 @@ export function decodeHash(hash: string): Partial<Record<keyof ProjectData, unkn
     } catch {
       json = binary; // legacy hashes encoded Latin-1 characters as single bytes
     }
-    const parsed: unknown = JSON.parse(json);
-    if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) return null;
-    return parsed as Partial<Record<keyof ProjectData, unknown>>;
+    return parseProjectJson(json);
   } catch {
     return null;
   }
+}
+
+/** Extension of exported project files. */
+export const FILE_EXTENSION = '.fcast.json';
+/** MIME type of exported project files. */
+export const FILE_MIME_TYPE = 'application/json';
+/** File name used when the project has no usable name. */
+export const DEFAULT_FILE_NAME = 'Project';
+
+/**
+ * File name for exporting a project: `<Project Name>.fcast.json`.
+ * Characters that are not allowed in file names are replaced with `_`, and leading/trailing spaces and dots are removed.
+ */
+export function exportFileName(projectName: string): string {
+  const name = projectName
+    .replace(/[\u0000-\u001f\u007f<>:"/\\|?*]/g, '_')
+    .replace(/^[\s.]+|[\s.]+$/g, '');
+  return (name || DEFAULT_FILE_NAME) + FILE_EXTENSION;
+}
+
+const JSON_NUMBER = String.raw`-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?`;
+/**
+ * A pretty-printed array of numbers (one number per line). JSON strings cannot contain raw line breaks,
+ * so this only matches arrays, never text inside string values.
+ */
+const PRETTY_NUMBER_ARRAY = new RegExp(String.raw`\[\n\s*(${JSON_NUMBER}(?:,\n\s*${JSON_NUMBER})*)\n\s*\]`, 'g');
+
+/**
+ * Encodes data as the contents of an exported project file: the same JSON as the URL hash, pretty-printed,
+ * with arrays of numbers (the samples) kept on a single line.
+ */
+export function encodeFile(data: ProjectData): string {
+  const json = JSON.stringify(data, null, 2).replace(
+    PRETTY_NUMBER_ARRAY,
+    (_, items: string) => `[${items.replace(/,\n\s*/g, ', ')}]`,
+  );
+  return json + '\n';
+}
+
+/**
+ * Decodes the contents of an exported project file (a byte order mark is ignored).
+ * @returns the decoded object, or null when the file is not a JSON object
+ */
+export function decodeFile(text: string): LoadedData | null {
+  return parseProjectJson(text.replace(/^\uFEFF/, ''));
 }
